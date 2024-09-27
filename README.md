@@ -1,4 +1,5 @@
 # My-Fluffy
+```bash
 .
 ├── README.md
 ├── app
@@ -32,3 +33,4 @@
 │       └── main
 ├── go.mod
 └── go.sum
+```
