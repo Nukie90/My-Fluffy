@@ -15,6 +15,7 @@
         },
         "version": "1.0"
     },
+    "host": "localhost:3000",
     "basePath": "/api/v1",
     "paths": {
         "/users": {
@@ -47,6 +48,12 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -63,7 +70,7 @@
                 "summary": "Get all users",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "List of users",
                         "schema": {
                             "type": "array",
                             "items": {

@@ -18,6 +18,7 @@ definitions:
       username:
         type: string
     type: object
+host: localhost:3000
 info:
   contact:
     email: support@swagger.io
@@ -50,6 +51,10 @@ paths:
           description: User created successfully
           schema:
             type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
       summary: Create a new user
       tags:
       - users
@@ -60,7 +65,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: List of users
           schema:
             items:
               $ref: '#/definitions/model.User'

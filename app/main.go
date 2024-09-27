@@ -7,6 +7,7 @@
 // @contact.email	support@swagger.io
 // @license.name	MIT
 // @license.url	https://opensource.org/licenses/MIT
+// @host			localhost:3000
 // @BasePath		/api/v1
 package main
 

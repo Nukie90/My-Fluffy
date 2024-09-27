@@ -23,6 +23,7 @@ go.work.sum
 
 # env file
 .env
+.yaml
 
 # sum file
 go.sum

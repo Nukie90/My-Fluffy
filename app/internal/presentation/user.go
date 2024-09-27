@@ -19,15 +19,15 @@ func NewUserHandler(uu *business.UserUsecase) *UserHandler {
 
 // CreateUser godoc
 //
-//		@Summary		Create a new user
-//		@Description	Create a new user
-//		@Tags			users
-//		@Accept			json
-//		@Param			user	body	model.Signup	true	"Signup information"
-//		@Produce		json
-//		@Success		200	{string}	string	"User created successfully"
-//	 @Failure		400	{string}	string	"Bad request"
-//		@Router			/users [post]
+//	@Summary		Create a new user
+//	@Description	Create a new user
+//	@Tags			users
+//	@Accept			json
+//	@Param			user	body	model.Signup	true	"Signup information"
+//	@Produce		json
+//	@Success		200	{string}	string	"User created successfully"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/users [post]
 func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
 	var signup model.Signup
 	if err := c.BodyParser(&signup); err != nil {
@@ -47,7 +47,7 @@ func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
 //	@Description	Get all users
 //	@Tags			users
 //	@Produce		json
-//	@Success		200	{object}	[]model.User
+//	@Success		200	{object}	[]model.User	"List of users"
 //	@Router			/users/all [get]
 func (uh *UserHandler) GetAllUser(c *fiber.Ctx) error {
 	users, err := uh.UserUsecase.GetAll()
