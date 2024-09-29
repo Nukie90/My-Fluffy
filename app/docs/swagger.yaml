@@ -5,6 +5,9 @@ definitions:
       password:
         example: password
         type: string
+      role:
+        example: admin
+        type: string
       username:
         example: john_doe
         type: string
@@ -14,6 +17,8 @@ definitions:
       id:
         type: string
       password:
+        type: string
+      role:
         type: string
       username:
         type: string

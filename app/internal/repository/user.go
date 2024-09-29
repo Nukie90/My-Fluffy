@@ -35,3 +35,24 @@ func (ur *UserRepo) FindAll() ([]entity.User, error) {
 
 	return users, nil
 }
+
+// FindAdmin finds the admin user
+func (ur *UserRepo) FindAdmin() ([]entity.User, error) {
+	var admins []entity.User
+	result := ur.DB.Where("role = ?", "admin").Find(&admins)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return admins, nil
+}
+
+// StoreNotification stores a notification
+func (ur *UserRepo) StoreNotification(notification *entity.Notification) error {
+	result := ur.DB.Create(notification)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}

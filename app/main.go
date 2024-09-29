@@ -14,6 +14,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/Nukie90/my-fluffy/app/internal/business"
+	"github.com/Nukie90/my-fluffy/app/internal/presentation"
+	"github.com/Nukie90/my-fluffy/app/internal/repository"
 	"github.com/gofiber/fiber/v2"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 
@@ -48,21 +51,31 @@ func (a *App) Start(name, value, usage string) {
 	}
 
 	dbConfig := shared.NewGormConfig(configDetail)
-	fmt.Println(dbConfig)
 	db, err := dbConfig.Connector()
 	if err != nil {
 		fmt.Println("Error connecting to database: ", err)
 	}
 
-	api.SetupRoutes(a.App, db)
+	//Initialize the repository, notifier and service
+	userRepo := repository.UserRepo{DB: db}
+	notifier := shared.UserCreationNotifier{}
+	adminNotifier := business.NewAdminNotifier(&userRepo)
+	notifier.Register(adminNotifier)
+
+	userUsecase := business.NewUserUsecase(&userRepo, &notifier)
+	userHandler := presentation.UserHandler{UserUsecase: userUsecase}
+
+	router := api.NewRouter(&userHandler)
+
+	router.SetupRoutes(a.App)
 
 	a.Get("/swagger/*", fiberSwagger.WrapHandler)
 
-	err = a.App.Listen(":3000")
+	err = a.Listen(":3000")
 	if err != nil {
 		return
 	}
-	fmt.Println("Server started on port 3000")
+
 }
 
 func main() {

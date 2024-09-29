@@ -96,6 +96,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "password"
                 },
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
                 "username": {
                     "type": "string",
                     "example": "john_doe"
@@ -109,6 +113,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 },
                 "username": {

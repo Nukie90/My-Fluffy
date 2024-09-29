@@ -24,6 +24,7 @@ go.work.sum
 # env file
 .env
 .yaml
+.ymal
 
 # sum file
 go.sum
@@ -31,8 +32,8 @@ go.sum
 #tmp directory
 tmp/
 
-#air binary
-air
+# sqlite database
+*.db
 
 #.idea directory
 .idea/

@@ -3,18 +3,23 @@ package business
 import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
+	"github.com/Nukie90/my-fluffy/app/internal/shared"
 
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
 )
 
 // UserUsecase is the usecase for users
 type UserUsecase struct {
-	UserRepo *repository.UserRepo
+	UserRepo     *repository.UserRepo
+	UserCreation *shared.UserCreationNotifier
 }
 
 // NewUserUsecase creates a new UserUsecase
-func NewUserUsecase(ur *repository.UserRepo) *UserUsecase {
-	return &UserUsecase{UserRepo: ur}
+func NewUserUsecase(ur *repository.UserRepo, uc *shared.UserCreationNotifier) *UserUsecase {
+	return &UserUsecase{
+		UserRepo:     ur,
+		UserCreation: uc,
+	}
 }
 
 // Create creates a new user
@@ -22,9 +27,17 @@ func (uu *UserUsecase) Create(user *model.Signup) error {
 	u := &entity.User{
 		Username: user.Username,
 		Password: user.Password,
+		Role:     user.Role,
 	}
 
-	return uu.UserRepo.Create(u)
+	err := uu.UserRepo.Create(u)
+	if err != nil {
+		return err
+	}
+
+	uu.UserCreation.NotifyObserver(user.Username)
+
+	return nil
 }
 
 // GetAll gets all users
@@ -40,6 +53,7 @@ func (uu *UserUsecase) GetAll() ([]model.User, error) {
 			ID:       user.ID.String(),
 			Username: user.Username,
 			Password: user.Password,
+			Role:     user.Role,
 		})
 	}
 

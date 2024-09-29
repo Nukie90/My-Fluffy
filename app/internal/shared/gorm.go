@@ -49,4 +49,5 @@ func (gc *GormConfig) Connector() (*gorm.DB, error) {
 
 func (gc *GormConfig) AutoMirage(db *gorm.DB) {
 	db.AutoMigrate(&entity.User{})
+	db.AutoMigrate(&entity.Notification{})
 }

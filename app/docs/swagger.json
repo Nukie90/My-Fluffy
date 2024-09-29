@@ -90,6 +90,10 @@
                     "type": "string",
                     "example": "password"
                 },
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
                 "username": {
                     "type": "string",
                     "example": "john_doe"
@@ -103,6 +107,9 @@
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 },
                 "username": {

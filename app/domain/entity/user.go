@@ -14,6 +14,7 @@ type User struct {
 	ID        ulid.ULID      `json:"id" gorm:"primaryKey"`
 	Username  string         `json:"username"`
 	Password  string         `json:"password"`
+	Role      string         `json:"role"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeleteAt  gorm.DeletedAt `json:"delete_at" gorm:"index"`
