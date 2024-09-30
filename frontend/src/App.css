@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-light-purple: #C4C3E3;
+  --color-dark-purple: #504E76;
+  --color-light-yellow: #FDF8E2;
+  --color-green: #A3B565;
+  --color-yellow: #FCDD9D;
+  --color-orange: #F1642E;
+}
+
 .App {
   text-align: center;
 }
