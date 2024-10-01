@@ -11,6 +11,54 @@
   --color-orange: #F1642E;
 }
 
+.colorct-light-purple {
+  color: var(--color-light-purple);
+}
+
+.colorct-dark-purple {
+  color: var(--color-dark-purple);
+}
+
+.colorct-light-yellow {
+  color: var(--color-light-yellow);
+}
+
+.colorct-green {
+  color: var(--color-green);
+}
+
+.colorct-yellow {
+  color: var(--color-yellow);
+}
+
+.colorct-orange {
+  color: var(--color-orange);
+}
+
+.bgct-light-purple {
+  background-color: var(--color-light-purple);
+}
+
+.bgct-dark-purple {
+  background-color: var(--color-dark-purple);
+}
+
+.bgct-light-yellow {
+  background-color: var(--color-light-yellow);
+}
+
+.bgct-green {
+  background-color: var(--color-green);
+}
+
+.bgct-yellow {
+  background-color: var(--color-yellow);
+}
+
+.bgct-orange {
+  background-color: var(--color-orange);
+}
+
 .App {
   text-align: center;
 }

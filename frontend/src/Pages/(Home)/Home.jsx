@@ -1,16 +1,17 @@
 import React from 'react';
+import { useState } from 'react';
 
 import './../../App';
 import TopBar from '../../Components/TopBar';
+import BottomBar from '../../Components/BottomBar';
 
 function Home() {
   return (
-    <div className="bg-blue-500 bg-auto h-screen">
-      {/* <h1 className="text-4xl font-bold text-green-500">Hello, Tailwind CSS!</h1> */}
-        <TopBar />
+    <div className="bg-white bg-auto h-screen">
         <div className='h-auto bg-red-200'>
-
+          this is the home page
         </div>
+        <BottomBar />
     </div>
   );
 }
