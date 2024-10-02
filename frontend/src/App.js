@@ -8,28 +8,31 @@ import Home from './Pages/(Home)/Home';
 import Rewards from './Pages/Rewards/Rewards';
 import Saved from './Pages/Saved/Saved';
 import Profile from './Pages/Profile/Profile';
-
-import HomeIcon from './Components/Icons/home_icon.svg';
-import AddIcon from './Components/Icons/add_icon.svg';
-import RewardsIcon from './Components/Icons/rewards_icon.svg';
-import RewardsIconActive from './Components/Icons/rewards_icon_active.svg';
-import SavedIcon from './Components/Icons/saved_icon.svg';
-import SavedIconActive from './Components/Icons/saved_icon_active.svg';
+import Login from './Pages/Auth/Login';
+import Signup from './Pages/Auth/Signup';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState('Home');
 
   return (
-    <Router>
-      <TopBar />
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/rewards" element={<Rewards />} />
-          <Route path="/saved" element={<Saved />} />
-          <Route path="/profile" element={<Profile />} />
-      </Routes>
-      <BottomBar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-    </Router>
+    <div className='min-h-screen'>
+      <Router>
+        {currentPage !== 'Login' && currentPage !== 'Signup' && (
+          <TopBar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        )}
+        <Routes>
+            <Route path="/" element={<Home currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+            <Route path="/rewards" element={<Rewards currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+            <Route path="/saved" element={<Saved currentPage={currentPage} setCurrentPage={setCurrentPage} />}/>
+            <Route path="/profile" element={<Profile currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+            <Route path="/login" element={<Login currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+            <Route path="/signup" element={<Signup currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+        </Routes>
+        {currentPage !== 'Login' && currentPage !== 'Signup' && (
+          <BottomBar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        )}
+      </Router>
+    </div>
   );
 }
 

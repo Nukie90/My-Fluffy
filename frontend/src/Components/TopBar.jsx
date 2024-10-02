@@ -5,8 +5,9 @@ import DMIcon from './Icons/dm_icon.svg';
 import DefaultPFP from './Profiles/default_pfp.jpg';
 
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-function TopBar() {
+function TopBar({CurrentPage, setCurrentPage}) {
 
     let pfp = DefaultPFP;
     let dmNoti = '';
@@ -15,22 +16,25 @@ function TopBar() {
     const toprightIcons = [SearchIcon, NotiIcon, DMIcon];
 
     return (
-        <div className="h-auto flex text-center bg-white shadow-md items-center justify-between sm:pt-4 md:pt-0 sm:px-4 md:px-6 lg:px-8"
+        <div className="fixed h-20 w-full flex text-center bg-white shadow-md items-center justify-between sm:pt-6 md:pt-0 sm:px-4 md:px-6 lg:px-8"
             style={{ color: 'var(--color-dark-purple)' }}
         >
             <div className='flex items-center justify-center rounded-full'>
-                <button 
-                    className='
-                        sm:w-9 h-9 
-                        sm:hover:w-10 h-10 
-                        lg:w-10 h-10 
-                        lg:hover:w-12 h-12 
-                        xl:w-12 h-12
-                        xl:hover:w-14 h-14
-                        rounded-full transition-all duration-300'
-                >
-                    <img src={pfp} alt="Profile Pic" key={"Profile Pic"} className='rounded-full' />
-                </button>
+                <Link to={'/profile'}>
+                    <button 
+                        onClick={() => setCurrentPage('Profile')}
+                        className='
+                            sm:w-9 h-9 
+                            sm:hover:w-10 h-10 
+                            lg:w-10 h-10 
+                            lg:hover:w-12 h-12 
+                            xl:w-12 h-12
+                            xl:hover:w-14 h-14
+                            rounded-full transition-all duration-300'
+                    >
+                        <img src={pfp} alt="Profile Pic" key={"Profile Pic"} className='rounded-full' />
+                    </button>
+                </Link>
             </div>
             <div className='flex justify-end py-5'>
             {toprightIcons.map((icon, index) => (

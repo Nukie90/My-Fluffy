@@ -1,8 +1,12 @@
 import './../../App.css';
 
-import { useState } from 'react'; 
+import { useState, useEffect } from 'react'; 
 
-function Rewards() {
+function Rewards({currentPage, setCurrentPage}) {
+    useEffect(() => {
+        setCurrentPage('Rewards');
+    }, [setCurrentPage]);
+
     return (
         <div className='h-auto bg-red-200'>
             this is the rewards page

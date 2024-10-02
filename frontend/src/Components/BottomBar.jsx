@@ -38,8 +38,8 @@ function BottomBar({currentPage, setCurrentPage}) {
                             onClick={() => setCurrentPage(page)}
                             className='
                                 sm:mx-8
-                                lg:mx-20
-                                xl:mx-32
+                                lg:mx-12
+                                xl:mx-14
                                 sm:w-12 sm:h-12
                                 lg:w-16 lg:h-16
                                 xl:w-20 xl:h-20
@@ -49,7 +49,11 @@ function BottomBar({currentPage, setCurrentPage}) {
                             <img 
                                 src={currentPage === page ? activeIcon : icon} 
                                 alt={page} 
-                                className='sm:w-8 sm:h-8 lg:w-18 lg:h-18' 
+                                className={`
+                                    ${currentPage === page ? 'sm:w-9 sm:h-9 lg:w-12 lg:h-12 xl:w-14 xl:h-14' : 'sm:w-8 sm:h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12'}
+                                    sm:hover:w-10 sm:hover:h-10 lg:hover:w-14 lg:hover:h-14 xl:hover:w-16 xl:hover:h-16
+                                    transition-all duration-200 ease-out
+                                `}
                             />
                         </button>
                     </Link>

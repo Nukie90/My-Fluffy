@@ -9,7 +9,7 @@ module.exports = {
         md: '768px',    // Medium devices like tablets
         lg: '1440px',   // Large devices like smaller laptops
         xl: '1920px',   // Larger laptops and desktops
-      }
+      },
     },
   },
   plugins: [],
