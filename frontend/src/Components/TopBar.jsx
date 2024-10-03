@@ -2,14 +2,14 @@ import './../App.css';
 import SearchIcon from './Icons/search_icon.svg';
 import NotiIcon from './Icons/noti_icon.svg';
 import DMIcon from './Icons/dm_icon.svg';
-import DefaultPFP from './Profiles/default_pfp.jpg';
+// import DefaultPFP from './Profiles/default_pfp.jpg';
 
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 function TopBar({CurrentPage, setCurrentPage}) {
 
-    let pfp = DefaultPFP;
+    let pfp = "/Profiles/default_pfp.jpg";
     let dmNoti = '';
 
     dmNoti = '2';
