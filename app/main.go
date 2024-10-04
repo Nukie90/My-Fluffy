@@ -71,9 +71,10 @@ func (a *App) Start(name, value, usage string) {
 	postUsecase := business.NewPostUsecase(&postRepo)
 	postHandler := presentation.PostHandler{PostUsecase: postUsecase}
 
-	router := api.NewRouter(&userHandler, &postHandler)
+	realRouter := api.NewRouter(&userHandler, &postHandler)
+	routerProxy := api.NewRouterProxy(realRouter)
 
-	router.SetupRoutes(a.App)
+	routerProxy.SetupRoutes(a.App)
 
 	a.Get("/swagger/*", fiberSwagger.WrapHandler)
 
