@@ -83,6 +83,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/posts/feed": {
+            "get": {
+                "description": "Get paginated posts for the feed, 10 at a time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Get paginated posts",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated posts",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Post"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/posts/found": {
             "put": {
                 "description": "Found pet",
@@ -278,6 +319,38 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "example": "john_doe"
+                }
+            }
+        },
+        "model.Post": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "found_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "owner_id": {
+                    "type": "string"
+                },
+                "picture": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "reward": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },

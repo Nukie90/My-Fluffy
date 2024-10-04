@@ -16,6 +16,27 @@ definitions:
         example: john_doe
         type: string
     type: object
+  model.Post:
+    properties:
+      content:
+        type: string
+      found_id:
+        type: string
+      id:
+        type: integer
+      owner_id:
+        type: string
+      picture:
+        items:
+          type: integer
+        type: array
+      reward:
+        type: number
+      status:
+        type: string
+      title:
+        type: string
+    type: object
   model.Signup:
     properties:
       password:
@@ -91,6 +112,33 @@ paths:
           schema:
             type: string
       summary: Create a new post
+      tags:
+      - posts
+  /posts/feed:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated posts for the feed, 10 at a time
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated posts
+          schema:
+            items:
+              $ref: '#/definitions/model.Post'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get paginated posts
       tags:
       - posts
   /posts/found:

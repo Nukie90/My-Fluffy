@@ -45,3 +45,13 @@ func (pr *PostRepo) FoundPet(postID uint, foundID ulid.ULID) error {
 
 	return nil
 }
+
+func (pr *PostRepo) GetPaginatedPosts(limit int, offset int) ([]entity.Post, error) {
+	var posts []entity.Post
+	result := pr.DB.Limit(limit).Offset(offset).Find(&posts)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return posts, nil
+}

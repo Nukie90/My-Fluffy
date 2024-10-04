@@ -128,3 +128,28 @@ func (ph *PostHandler) FoundPet(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{"message": "Pet found"})
 }
+
+// GetPaginatedPosts godoc
+//
+//	@Summary		Get paginated posts
+//	@Description	Get paginated posts for the feed, 10 at a time
+//	@Tags			posts
+//	@Accept			json
+//	@Produce		json
+//	@Param			page	query		int	true	"Page number"
+//	@Success		200		{array}		model.Post	"Paginated posts"
+//	@Failure		400		{string}	string		"Bad request"
+//	@Router			/posts/feed [get]
+func (ph *PostHandler) GetPaginatedPosts(c *fiber.Ctx) error {
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil || page < 1 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid page number"})
+	}
+
+	posts, err := ph.PostUsecase.GetPaginatedPosts(page)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(posts)
+}
