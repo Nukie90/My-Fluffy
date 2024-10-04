@@ -8,12 +8,13 @@ import Posts from '../../Components/Posts';
 
 function Home({CurrentPage, setCurrentPage}) {
   useEffect(() => {
-      setCurrentPage('Home');
+    setCurrentPage('Home');
   }, [setCurrentPage]);
 
   const data = [
     {
       id: 1,
+      Type: 'Lost',
       Owner: 'Owner1',
       OwnerPicture: '/Profiles/default_pfp.jpg',
       Location: 'Location1',
@@ -24,6 +25,7 @@ function Home({CurrentPage, setCurrentPage}) {
     },
     {
       id: 2,
+      Type: 'Found',
       Owner: 'Owner2',
       OwnerPicture: '/Profiles/default_pfp.jpg',
       Location: 'Location2',
@@ -44,7 +46,7 @@ function Home({CurrentPage, setCurrentPage}) {
     ">
         <div className='h-auto pt-4 pb-20'>
           <div className='h-auto'>
-            <h1 className='sm:text-xl md:text-2xl font-bold'>Near You</h1>
+            <h1 className='sm:text-xl md:text-2xl font-bold'>Posts</h1>
           </div>
           <Posts data={data} />
         </div>
