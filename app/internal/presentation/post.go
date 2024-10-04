@@ -6,6 +6,7 @@ import (
 	"github.com/Nukie90/my-fluffy/app/internal/business"
 	"github.com/gofiber/fiber/v2"
 	"io"
+	"strconv"
 )
 
 type PostHandler struct {
@@ -25,6 +26,7 @@ func NewPostHandler(pu *business.PostUsecase) *PostHandler {
 //	@Param			title	formData	string	true	"Post title"
 //	@Param			content	formData	string	true	"Post content"
 //	@Param			file	formData	file	true	"Post picture"
+//	@Param			reward	formData	string	true	"Post reward"
 //	@Produce		json
 //	@Success		200	{string}	string	"Post created successfully"
 //	@Failure		400	{string}	string	"Bad request"
@@ -32,6 +34,12 @@ func NewPostHandler(pu *business.PostUsecase) *PostHandler {
 func (ph *PostHandler) CreatePost(c *fiber.Ctx) error {
 	title := c.FormValue("title")
 	content := c.FormValue("content")
+	reward := c.FormValue("reward")
+	//reward string to float64
+	rewardFloat, err := strconv.ParseFloat(reward, 64)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
 
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -56,6 +64,7 @@ func (ph *PostHandler) CreatePost(c *fiber.Ctx) error {
 	post.Picture = pictureData
 	cookie := c.Cookies("session")
 	post.OwnerID = cookie
+	post.Reward = rewardFloat
 
 	if err := c.BodyParser(&post); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -90,4 +99,32 @@ func (ph *PostHandler) GetPostsFromSpecificUser(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(posts)
+}
+
+// FoundPet godoc
+//
+//	@Summary		Found pet
+//	@Description	Found pet
+//	@Tags			posts
+//	@Accept			json
+//	@Param			id	body	model.FoundPost	true	"Post ID"
+//	@Produce		json
+//	@Success		200	{string}	string	"Pet found"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/posts/found [put]
+func (ph *PostHandler) FoundPet(c *fiber.Ctx) error {
+	var foundPost model.FoundPost
+	fmt.Println(foundPost.FoundID)
+	if err := c.BodyParser(&foundPost); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	cookie := c.Cookies("session")
+	foundPost.FoundID = cookie
+	err := ph.PostUsecase.FoundPet(&foundPost)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"InternalError": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"message": "Pet found"})
 }

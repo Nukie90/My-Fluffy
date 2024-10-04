@@ -12,6 +12,7 @@ type Post struct {
 	Content   string         `json:"content"`
 	Status    string         `json:"status"`
 	Picture   []byte         `json:"picture"`
+	Reward    float64        `json:"reward" gorm:"default:0"`
 	OwnerID   ulid.ULID      `json:"owner_id"`
 	FoundID   ulid.ULID      `json:"found_id" gorm:"default:null"`
 	CreatedAt time.Time      `json:"created_at"`

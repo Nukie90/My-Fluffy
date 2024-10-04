@@ -1,6 +1,7 @@
 package business
 
 import (
+	"fmt"
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
@@ -20,6 +21,7 @@ func (pu *PostUsecase) Create(post *model.CreatePost) error {
 		Title:   post.Title,
 		Content: post.Content,
 		Picture: post.Picture,
+		Reward:  post.Reward,
 		OwnerID: ulid.MustParse(post.OwnerID),
 	}
 
@@ -49,10 +51,28 @@ func (pu *PostUsecase) GetPostsFromSpecificUser(userID string) ([]model.Post, er
 			Title:   post.Title,
 			Content: post.Content,
 			Picture: post.Picture,
+			Reward:  post.Reward,
 			OwnerID: post.OwnerID.String(),
 			FoundID: post.FoundID.String(),
 		})
 	}
 
 	return postsModel, nil
+}
+
+func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
+	//to ulid
+	fmt.Println(foundPost.FoundID)
+	foundidUlid, err := ulid.Parse(foundPost.FoundID)
+	if err != nil {
+		fmt.Println("unmarshling error")
+		return err
+	}
+
+	err = pu.PostRepo.FoundPet(foundPost.ID, foundidUlid)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

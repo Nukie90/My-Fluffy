@@ -32,6 +32,7 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 			{
 				post.Post("/", r.postHandler.CreatePost)
 				post.Get("/user", r.postHandler.GetPostsFromSpecificUser)
+				post.Put("/found", r.postHandler.FoundPet)
 			}
 		}
 	}

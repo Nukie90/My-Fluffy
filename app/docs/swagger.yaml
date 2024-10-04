@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  model.FoundPost:
+    properties:
+      found_id:
+        type: string
+      id:
+        type: integer
+    type: object
   model.Login:
     properties:
       password:
@@ -67,6 +74,11 @@ paths:
         name: file
         required: true
         type: file
+      - description: Post reward
+        in: formData
+        name: reward
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -79,6 +91,32 @@ paths:
           schema:
             type: string
       summary: Create a new post
+      tags:
+      - posts
+  /posts/found:
+    put:
+      consumes:
+      - application/json
+      description: Found pet
+      parameters:
+      - description: Post ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/model.FoundPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pet found
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Found pet
       tags:
       - posts
   /posts/user:

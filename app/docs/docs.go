@@ -58,11 +58,58 @@ const docTemplate = `{
                         "name": "file",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Post reward",
+                        "name": "reward",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "Post created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/found": {
+            "put": {
+                "description": "Found pet",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Found pet",
+                "parameters": [
+                    {
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.FoundPost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pet found",
                         "schema": {
                             "type": "string"
                         }
@@ -210,6 +257,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.FoundPost": {
+            "type": "object",
+            "properties": {
+                "found_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Login": {
             "type": "object",
             "properties": {

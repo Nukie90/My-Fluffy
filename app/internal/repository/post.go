@@ -32,3 +32,16 @@ func (pr *PostRepo) GetPostFromSpecificUser(userID ulid.ULID) ([]entity.Post, er
 
 	return posts, nil
 }
+
+func (pr *PostRepo) FoundPet(postID uint, foundID ulid.ULID) error {
+	// Find the post update the foundID and status to found
+	result := pr.DB.Model(&entity.Post{}).Where("id = ?", postID).Updates(map[string]interface{}{
+		"found_id": foundID,
+		"status":   "Found",
+	})
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
