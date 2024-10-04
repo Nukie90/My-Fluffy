@@ -14,10 +14,12 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/Nukie90/my-fluffy/app/internal/business"
 	"github.com/Nukie90/my-fluffy/app/internal/presentation"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 
 	"github.com/Nukie90/my-fluffy/app/internal/shared"
@@ -74,6 +76,11 @@ func (a *App) Start(name, value, usage string) {
 	router.SetupRoutes(a.App)
 
 	a.Get("/swagger/*", fiberSwagger.WrapHandler)
+
+	a.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+		AllowOrigins:     "http://127.0.0.1:3001",
+	}))
 
 	err = a.Listen(":3000")
 	if err != nil {
