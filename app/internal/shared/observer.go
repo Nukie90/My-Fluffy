@@ -19,10 +19,10 @@ func (ucn *UserCreationNotifier) Unregister(observer Observer) {
 	}
 }
 
-func (ucn *UserCreationNotifier) NotifyObserver(username string, t string) {
+func (ucn *UserCreationNotifier) NotifyObserver(username string, notificationType string) {
 	fmt.Println("Notifying observers")
 	for _, o := range ucn.Observers {
-		err := o.Update(username, t)
+		err := o.Update(username, notificationType)
 		if err != nil {
 			return
 		}

@@ -62,7 +62,8 @@ func (a *App) Start(name, value, usage string) {
 	userRepo := repository.UserRepo{DB: db}
 	postRepo := repository.PostRepo{DB: db}
 	notifier := shared.UserCreationNotifier{}
-	adminNotifier := business.NewAdminNotifier(&userRepo)
+	notificationFactory := &shared.DefaultNotificationFactory{}
+	adminNotifier := business.NewAdminNotifier(&userRepo, notificationFactory)
 	notifier.Register(adminNotifier)
 
 	userUsecase := business.NewUserUsecase(&userRepo, &notifier)

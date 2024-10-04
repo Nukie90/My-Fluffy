@@ -2,54 +2,45 @@ package business
 
 import (
 	"fmt"
-	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
 	"github.com/Nukie90/my-fluffy/app/internal/shared"
 )
 
 type AdminNotifier struct {
-	userRepo *repository.UserRepo
+	userRepo            *repository.UserRepo
+	notificationFactory shared.NotificationFactory
 }
 
 // Ensure AdminNotifier implements the Observer interface.
 var _ shared.Observer = (*AdminNotifier)(nil)
 
-func NewAdminNotifier(ur *repository.UserRepo) *AdminNotifier {
+func NewAdminNotifier(ur *repository.UserRepo, nf shared.NotificationFactory) *AdminNotifier {
 	return &AdminNotifier{
-		userRepo: ur,
+		userRepo:            ur,
+		notificationFactory: nf,
 	}
 }
 
 // Update is the method that is called when a new user is created.
-func (n *AdminNotifier) Update(username string, t string) error {
+func (n *AdminNotifier) Update(username, notificationType string) error {
 	admins, err := n.userRepo.FindAdmin()
 	if err != nil {
 		return err
 	}
 
-	switch t {
-	case "createUser":
-		fmt.Println("Notifying admins about user creation")
-
-		for _, admin := range admins {
-			notificationMessage := fmt.Sprintf("%s: User: %s is created", admin.Username, username)
-			notification := &entity.Notification{
-				UserID:  admin.ID,
-				Message: notificationMessage,
-			}
-
-			err := n.userRepo.StoreNotification(notification)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(notificationMessage)
+	for _, admin := range admins {
+		notification, err := n.notificationFactory.CreateNotification(admin.Username, username, notificationType)
+		if err != nil {
+			return err
 		}
 
-	default:
-		fmt.Println("Unknown notification type")
+		err = n.userRepo.StoreNotification(notification)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(notification.Message)
 	}
 
 	return nil
-
 }
