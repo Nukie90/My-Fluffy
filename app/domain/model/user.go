@@ -12,3 +12,8 @@ type User struct {
 	Password string `json:"password"`
 	Role     string `json:"role"`
 }
+
+type Login struct {
+	Username string `json:"username" example:"john_doe"`
+	Password string `json:"password" example:"password"`
+}

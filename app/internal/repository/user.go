@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"gorm.io/gorm"
 )
@@ -33,6 +34,7 @@ func (ur *UserRepo) FindAll() ([]entity.User, error) {
 		return nil, result.Error
 	}
 
+	fmt.Println(result)
 	return users, nil
 }
 
@@ -55,4 +57,14 @@ func (ur *UserRepo) StoreNotification(notification *entity.Notification) error {
 	}
 
 	return nil
+}
+
+func (ur *UserRepo) Login(username, password string) (entity.User, error) {
+	var user entity.User
+	result := ur.DB.Where("username = ? AND password = ?", username, password).First(&user)
+	if result.Error != nil {
+		return entity.User{}, result.Error
+	}
+
+	return user, nil
 }

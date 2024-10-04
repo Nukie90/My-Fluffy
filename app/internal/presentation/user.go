@@ -42,6 +42,39 @@ func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "User created successfully"})
 }
 
+// Login godoc
+//
+//	@Summary		Login
+//	@Description	Login
+//	@Tags			users
+//	@Accept			json
+//	@Param			user	body	model.Login	true	"Login information"
+//	@Produce		json
+//	@Success		200	{string}	string	"Login successful"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/users/login [post]
+func (uh *UserHandler) Login(c *fiber.Ctx) error {
+	var login model.Login
+	if err := c.BodyParser(&login); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	var user model.User
+
+	user, err := uh.UserUsecase.Login(&login)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	//set to session
+	c.Cookie(&fiber.Cookie{
+		Name:  "session",
+		Value: user.ID,
+	})
+
+	return c.JSON(fiber.Map{"message": "Login successful"})
+}
+
 // GetAllUser godoc
 //
 //	@Summary		Get all users

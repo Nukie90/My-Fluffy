@@ -35,7 +35,7 @@ func (uu *UserUsecase) Create(user *model.Signup) error {
 		return err
 	}
 
-	uu.UserCreation.NotifyObserver(user.Username)
+	uu.UserCreation.NotifyObserver(user.Username, "createUser")
 
 	return nil
 }
@@ -58,4 +58,19 @@ func (uu *UserUsecase) GetAll() ([]model.User, error) {
 	}
 
 	return usersModel, nil
+}
+
+// Login logs in a user
+func (uu *UserUsecase) Login(loginInfo *model.Login) (model.User, error) {
+	user, err := uu.UserRepo.Login(loginInfo.Username, loginInfo.Password)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	return model.User{
+		ID:       user.ID.String(),
+		Username: user.Username,
+		Password: user.Password,
+		Role:     user.Role,
+	}, nil
 }

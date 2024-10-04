@@ -7,10 +7,14 @@ import (
 
 type Router struct {
 	userHandler *presentation.UserHandler
+	postHandler *presentation.PostHandler
 }
 
-func NewRouter(uh *presentation.UserHandler) *Router {
-	return &Router{userHandler: uh}
+func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler) *Router {
+	return &Router{
+		userHandler: uh,
+		postHandler: ph,
+	}
 }
 
 func (r *Router) SetupRoutes(app *fiber.App) {
@@ -22,6 +26,12 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 			{
 				users.Post("/", r.userHandler.CreateUser)
 				users.Get("/all", r.userHandler.GetAllUser)
+				users.Post("/login", r.userHandler.Login)
+			}
+			post := v1.Group("/posts")
+			{
+				post.Post("/", r.postHandler.CreatePost)
+				post.Get("/user", r.postHandler.GetPostsFromSpecificUser)
 			}
 		}
 	}

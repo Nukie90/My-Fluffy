@@ -58,6 +58,7 @@ func (a *App) Start(name, value, usage string) {
 
 	//Initialize the repository, notifier and service
 	userRepo := repository.UserRepo{DB: db}
+	postRepo := repository.PostRepo{DB: db}
 	notifier := shared.UserCreationNotifier{}
 	adminNotifier := business.NewAdminNotifier(&userRepo)
 	notifier.Register(adminNotifier)
@@ -65,7 +66,10 @@ func (a *App) Start(name, value, usage string) {
 	userUsecase := business.NewUserUsecase(&userRepo, &notifier)
 	userHandler := presentation.UserHandler{UserUsecase: userUsecase}
 
-	router := api.NewRouter(&userHandler)
+	postUsecase := business.NewPostUsecase(&postRepo)
+	postHandler := presentation.PostHandler{PostUsecase: postUsecase}
+
+	router := api.NewRouter(&userHandler, &postHandler)
 
 	router.SetupRoutes(a.App)
 

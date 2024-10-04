@@ -1,5 +1,14 @@
 basePath: /api/v1
 definitions:
+  model.Login:
+    properties:
+      password:
+        example: password
+        type: string
+      username:
+        example: john_doe
+        type: string
+    type: object
   model.Signup:
     properties:
       password:
@@ -37,6 +46,60 @@ info:
   title: SDA My Fluffy API
   version: "1.0"
 paths:
+  /posts:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new post
+      parameters:
+      - description: Post title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Post content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: Post picture
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Post created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Create a new post
+      tags:
+      - posts
+  /posts/user:
+    get:
+      consumes:
+      - application/json
+      description: Get posts from specific user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Posts from specific user
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get posts from specific user
+      tags:
+      - posts
   /users:
     post:
       consumes:
@@ -76,6 +139,32 @@ paths:
               $ref: '#/definitions/model.User'
             type: array
       summary: Get all users
+      tags:
+      - users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: Login information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Login
       tags:
       - users
 swagger: "2.0"
