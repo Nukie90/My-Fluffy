@@ -14,17 +14,24 @@ function Home({CurrentPage, setCurrentPage}) {
   const data = [
     {
       id: 1,
-      user: 'User1',
-      userImage: '/Profiles/default_pfp.jpg',
-      pet: 'Pet1',
-      location: 'Location1',
-      date: 'Date1',
-      time: 'Time1',
-      description: 'Description1',
-      tags: ['Tag1', 'Tag2', 'Tag3'],
-      reward: '1000',
-      image: '/Images/pet1.png',
+      Owner: 'Owner1',
+      OwnerPicture: '/Profiles/default_pfp.jpg',
+      Location: 'Location1',
+      Title: 'Title1',
+      Description: 'Description1',
+      Reward: '1000',
+      Picture: '/Images/pet1.png',
     },
+    {
+      id: 2,
+      Owner: 'Owner2',
+      OwnerPicture: '/Profiles/default_pfp.jpg',
+      Location: 'Location2',
+      Title: 'Title2',
+      Description: 'Description2',
+      Reward: '2000',
+      Picture: '/Images/pet1.png',
+    }
   ];
 
   return (
@@ -32,10 +39,10 @@ function Home({CurrentPage, setCurrentPage}) {
       className="
         flex sm:flex-col md:flex-row
         h-auto w-full
-        pt-20 
+        pt-20
         sm:px-4 md:px-6 lg:px-8
     ">
-        <div className='h-auto py-4'>
+        <div className='h-auto pt-4 pb-20'>
           <div className='h-auto'>
             <h1 className='sm:text-xl md:text-2xl font-bold'>Near You</h1>
           </div>

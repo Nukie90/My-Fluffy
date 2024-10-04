@@ -8,13 +8,25 @@ import RewardsIconActive from './Icons/rewards_icon_active.svg';
 import SavedIcon from './Icons/saved_icon.svg';
 import SavedIconActive from './Icons/saved_icon_active.svg';
 
+import AddPost from './AddPost';
+
 function BottomBar({currentPage, setCurrentPage}) {
+    const [isAddPostVisible, setIsAddPostVisible] = useState(false);
     
     const pages = [
         { page: 'Rewards', icon: RewardsIcon, activeIcon: RewardsIconActive, link: '/rewards' },
         { page: 'Home', icon: HomeIcon, activeIcon: AddIcon, link: '/' },
         { page: 'Saved', icon: SavedIcon, activeIcon: SavedIconActive, link: '/saved' },
     ];
+
+    const handlePageClick = (page) => {
+        if (page === 'Home') {
+            setIsAddPostVisible(true);
+        } else {
+            setIsAddPostVisible(false);
+            setCurrentPage(page);
+        }
+    };
 
     return (
         <div 
@@ -35,7 +47,7 @@ function BottomBar({currentPage, setCurrentPage}) {
                 {pages.map(({ page, icon, activeIcon, link }, index) => (
                     <Link to={link} key={index}> 
                         <button
-                            onClick={() => setCurrentPage(page)}
+                            onClick={() => handlePageClick(page)}
                             className='
                                 sm:mx-8
                                 lg:mx-12
@@ -59,6 +71,7 @@ function BottomBar({currentPage, setCurrentPage}) {
                     </Link>
                 ))}
             </div>
+            {isAddPostVisible && <AddPost setIsAddPostVisible={setIsAddPostVisible} />}
         </div>
     );
 }
