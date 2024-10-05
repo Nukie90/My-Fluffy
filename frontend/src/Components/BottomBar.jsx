@@ -32,13 +32,13 @@ function BottomBar({currentPage, setCurrentPage}) {
         <div 
             className='
                 z-100
-                fixed bottom-10 left-0 
+                fixed bottom-10 left-0
                 w-full h-auto
                 flex items-center justify-center'
         >
             <div
                 className='
-                w-auto h-auto 
+                w-auto h-auto
                 bgct-dark-purple 
                 rounded-full
                 flex items-center justify-center

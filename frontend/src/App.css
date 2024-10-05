@@ -59,6 +59,13 @@
   background-color: var(--color-orange);
 }
 
+.placeholder-light-yellow::placeholder {
+  color: var(--color-light-yellow); /* or any color you prefer */
+}
+
+.placeholder-green::placeholder {
+  color: var(--color-green); /* or any color you prefer */
+}
 
 .App {
   text-align: center;

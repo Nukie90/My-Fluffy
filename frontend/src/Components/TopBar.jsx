@@ -13,7 +13,7 @@ function TopBar({CurrentPage, setCurrentPage}) {
     let dmNoti = '';
 
     dmNoti = '2';
-    const toprightIcons = [SearchIcon, NotiIcon, DMIcon];
+    const toprightIcons = [NotiIcon];
 
     return (
         <div className="fixed h-20 w-full flex text-center bg-white shadow-md items-center justify-between sm:pt-6 md:pt-0 sm:px-4 md:px-6 lg:px-8"
