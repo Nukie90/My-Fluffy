@@ -10,14 +10,16 @@ import (
 )
 
 type PostUsecase struct {
-	PostRepo    *repository.PostRepo
-	UserNotifer *shared.UserNotifier
+	PostRepo       *repository.PostRepo
+	AdminNotifier  *shared.UserNotifier
+	ClientNotifier *shared.UserNotifier
 }
 
-func NewPostUsecase(pr *repository.PostRepo, un *shared.UserNotifier) *PostUsecase {
+func NewPostUsecase(pr *repository.PostRepo, an *shared.UserNotifier, cn *shared.UserNotifier) *PostUsecase {
 	return &PostUsecase{
-		PostRepo:    pr,
-		UserNotifer: un,
+		PostRepo:       pr,
+		AdminNotifier:  an,
+		ClientNotifier: cn,
 	}
 }
 
@@ -76,6 +78,7 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 
 	err = pu.PostRepo.FoundPet(foundPost.ID, foundidUlid)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -86,7 +89,7 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 	}
 
 	//notify the owner
-	pu.UserNotifer.NotifyObserver(foundPostEntity.OwnerID.String(), foundPost.FoundID, "foundPet")
+	pu.ClientNotifier.NotifyObserver(foundPostEntity.OwnerID.String(), foundPost.FoundID, "foundPet")
 
 	return nil
 }

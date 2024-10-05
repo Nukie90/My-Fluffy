@@ -16,13 +16,24 @@ definitions:
         example: john_doe
         type: string
     type: object
+  model.Notification:
+    properties:
+      create_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      owner_id:
+        type: string
+    type: object
   model.Signup:
     properties:
       password:
         example: password
         type: string
       role:
-        example: admin
+        example: ""
         type: string
       username:
         example: john_doe
@@ -53,6 +64,44 @@ info:
   title: SDA My Fluffy API
   version: "1.0"
 paths:
+  /notifications:
+    get:
+      description: Get all notifications for current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of notifications
+          schema:
+            items:
+              $ref: '#/definitions/model.Notification'
+            type: array
+      summary: Get all notifications
+      tags:
+      - notifications
+  /notifications/{id}:
+    delete:
+      description: Delete a notification
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Notification deleted
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Delete a notification
+      tags:
+      - notifications
   /posts:
     post:
       consumes:

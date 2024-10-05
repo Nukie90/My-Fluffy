@@ -24,6 +24,64 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/notifications": {
+            "get": {
+                "description": "Get all notifications for current user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Get all notifications",
+                "responses": {
+                    "200": {
+                        "description": "List of notifications",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Notification"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/{id}": {
+            "delete": {
+                "description": "Delete a notification",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Delete a notification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Notification ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/posts": {
             "post": {
                 "description": "Create a new post",
@@ -281,6 +339,23 @@ const docTemplate = `{
                 }
             }
         },
+        "model.Notification": {
+            "type": "object",
+            "properties": {
+                "create_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Signup": {
             "type": "object",
             "properties": {
@@ -290,7 +365,7 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string",
-                    "example": "admin"
+                    "example": ""
                 },
                 "username": {
                     "type": "string",

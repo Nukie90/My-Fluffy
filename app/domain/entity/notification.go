@@ -10,6 +10,7 @@ type Notification struct {
 	UserID    ulid.ULID `json:"user_id" gorm:"primaryKey"`
 	Message   string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
+	DeleteAt  time.Time `json:"delete_at"`
 }
 
 func (Notification) TableName() string {

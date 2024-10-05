@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
+	"github.com/oklog/ulid/v2"
 	"gorm.io/gorm"
 )
 
@@ -18,6 +19,11 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 
 // Create creates a new user
 func (ur *UserRepo) Create(user *entity.User) error {
+	// Create a new user but first check if the user already exists
+	_, err := ur.FindByUsername(user.Username)
+	if err == nil {
+		return fmt.Errorf("user already exists")
+	}
 	result := ur.DB.Create(user)
 	if result.Error != nil {
 		return result.Error
@@ -67,4 +73,47 @@ func (ur *UserRepo) Login(username, password string) (entity.User, error) {
 	}
 
 	return user, nil
+}
+
+func (ur *UserRepo) FindByUsername(username string) (entity.User, error) {
+	var user entity.User
+	result := ur.DB.Where("username = ?", username).First(&user)
+	if result.Error != nil {
+		return entity.User{}, result.Error
+	}
+
+	return user, nil
+}
+
+func (ur *UserRepo) FindByID(userID string) (entity.User, error) {
+	var user entity.User
+	userIDULID, err := ulid.Parse(userID)
+	if err != nil {
+		return entity.User{}, err
+	}
+	result := ur.DB.Where("id = ?", userIDULID).First(&user)
+	if result.Error != nil {
+		return entity.User{}, result.Error
+	}
+
+	return user, nil
+}
+
+func (ur *UserRepo) ListNotifications(userID ulid.ULID) ([]entity.Notification, error) {
+	var notifications []entity.Notification
+	result := ur.DB.Where("user_id = ?", userID).Find(&notifications)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return notifications, nil
+}
+
+func (ur *UserRepo) DeleteNotification(notificationID uint) error {
+	result := ur.DB.Delete(&entity.Notification{}, notificationID)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
