@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import HomeIcon from './Icons/home_icon.svg';
 import AddIcon from './Icons/add_icon.svg';
@@ -20,7 +20,7 @@ function BottomBar({currentPage, setCurrentPage}) {
     ];
 
     const handlePageClick = (page) => {
-        if (page === 'Home') {
+        if (currentPage === 'Home') {
             setIsAddPostVisible(true);
         } else {
             setIsAddPostVisible(false);
