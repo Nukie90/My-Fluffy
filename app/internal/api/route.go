@@ -6,14 +6,16 @@ import (
 )
 
 type Router struct {
-	userHandler *presentation.UserHandler
-	postHandler *presentation.PostHandler
+	userHandler      *presentation.UserHandler
+	postHandler      *presentation.PostHandler
+	savedPostHandler *presentation.SavedPostHandler
 }
 
-func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler) *Router {
+func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler, sph *presentation.SavedPostHandler) *Router {
 	return &Router{
-		userHandler: uh,
-		postHandler: ph,
+		userHandler:      uh,
+		postHandler:      ph,
+		savedPostHandler: sph,
 	}
 }
 
@@ -34,6 +36,11 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 				post.Get("/user", r.postHandler.GetPostsFromSpecificUser)
 				post.Put("/found", r.postHandler.FoundPet)
 				post.Get("/feed", r.postHandler.GetPaginatedPosts)
+			}
+			savedPosts := v1.Group("/saved_posts")
+			{
+				savedPosts.Post("/", r.savedPostHandler.CreateSavedPost)
+				savedPosts.Get("/:user_id", r.savedPostHandler.GetAllSavedPostsByUser)
 			}
 			noti := v1.Group("/notifications")
 			{
