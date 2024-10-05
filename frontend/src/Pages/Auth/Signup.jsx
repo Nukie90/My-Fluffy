@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import './../../App.css';
 import MyFluffyLogo from './../../Components/Icons/MyFluffy_logo.svg';
@@ -13,7 +14,7 @@ function Signup({currentPage, setCurrentPage}) {
 
     const navigate = useNavigate();
 
-    const handleSignup = (e) => {
+    const handleSignup = async (e) => {
         e.preventDefault();  // Prevent default form submission
 
         const formData = new FormData(e.target);
@@ -27,9 +28,25 @@ function Signup({currentPage, setCurrentPage}) {
 
         setError('');
 
-        // Navigate to Home after login
-        setCurrentPage('Home');
-        navigate('/');
+        try {
+            const response = await axios.post(`http://localhost:3000/api/v1/users`, {
+                username,
+                password,
+                role: 'user',
+            }, {
+                withCredentials: true // Include cookies with the request
+            });
+
+            if (response.data) {
+                setCurrentPage('Home');
+                navigate('/');
+            } else {
+                setError(response.data.message || 'Signup failed');
+            }
+        } catch (err) {
+            console.error(err);
+            setError('An error occurred. Please try again.');
+        }
     };
 
     return (

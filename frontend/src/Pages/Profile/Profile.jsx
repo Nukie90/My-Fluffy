@@ -1,17 +1,22 @@
 import { Link } from 'react-router-dom';
 import './../../App.css';
+import { useState, useEffect } from 'react';
 
-import { useState, useEffect } from 'react'; 
+function Profile({ currentPage, setCurrentPage }) {
+    const [isLogged, setIsLogged] = useState(false);
 
-function Profile({currentPage, setCurrentPage}) {
     useEffect(() => {
         setCurrentPage('Profile');
+        const cookies = document.cookie.split('; ');
+        const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
+        
+        if (sessionCookie) {
+            setIsLogged(true);
+        }
     }, [setCurrentPage]);
 
-    let isLogged = false;
-
     return (
-        <div className='h-screen w-full bg-red-200 flex flex-column justify-center items-center'>
+        <div className='h-screen w-full bg-red-200 flex flex-col justify-center items-center'>
             {isLogged ? (
                 <div>
                     <h1>Profile</h1>
