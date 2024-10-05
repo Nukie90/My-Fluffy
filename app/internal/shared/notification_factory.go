@@ -2,29 +2,28 @@ package shared
 
 import (
 	"fmt"
-	"github.com/Nukie90/my-fluffy/app/domain/entity"
-	"github.com/oklog/ulid/v2"
 )
 
 type DefaultNotificationFactory struct{}
 
-func (f *DefaultNotificationFactory) CreateNotification(adminUsername, username, notificationType string) (*entity.Notification, error) {
+func (f *DefaultNotificationFactory) CreateNotification(receiver, sender, notificationType string) (string, error) {
 	var message string
 
 	switch notificationType {
 	case "createUser":
-		message = fmt.Sprintf("%s: User: %s is created", adminUsername, username)
+		fmt.Println("Creating user notification")
+		message = fmt.Sprintf("%s: User: %s is created", receiver, sender)
+	case "createPost":
+		fmt.Println("Creating post notification")
+		message = fmt.Sprintf("%s has created a post", sender)
+	case "foundPet":
+		fmt.Println("Creating found pet notification")
+		message = fmt.Sprintf("%s: %s has found your pet!", receiver, sender)
 	default:
-		return nil, fmt.Errorf("unknown notification type: %s", notificationType)
+		return "", fmt.Errorf("notification type not found")
 	}
 
-	adminULID, err := ulid.Parse(adminUsername)
-	if err != nil {
-		return nil, err
-	}
+	fmt.Println(message)
 
-	return &entity.Notification{
-		UserID:  adminULID,
-		Message: message,
-	}, nil
+	return message, nil
 }

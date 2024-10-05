@@ -2,6 +2,7 @@ package business
 
 import (
 	"fmt"
+	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
 	"github.com/Nukie90/my-fluffy/app/internal/shared"
 )
@@ -22,24 +23,27 @@ func NewAdminNotifier(ur *repository.UserRepo, nf shared.NotificationFactory) *A
 }
 
 // Update is the method that is called when a new user is created.
-func (n *AdminNotifier) Update(username, notificationType string) error {
+func (n *AdminNotifier) Update(receiver, sender, notificationType string) error {
 	admins, err := n.userRepo.FindAdmin()
 	if err != nil {
+		fmt.Println("1: ", err)
 		return err
 	}
 
 	for _, admin := range admins {
-		notification, err := n.notificationFactory.CreateNotification(admin.Username, username, notificationType)
+		notification, err := n.notificationFactory.CreateNotification(admin.Username, sender, notificationType)
 		if err != nil {
+			fmt.Println("2: ", err)
 			return err
 		}
 
-		err = n.userRepo.StoreNotification(notification)
+		err = n.userRepo.StoreNotification(&entity.Notification{
+			UserID:  admin.ID,
+			Message: notification,
+		})
 		if err != nil {
-			return err
+			fmt.Println("3: ", err)
 		}
-
-		fmt.Println(notification.Message)
 	}
 
 	return nil

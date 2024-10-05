@@ -5,15 +5,20 @@ import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
+	"github.com/Nukie90/my-fluffy/app/internal/shared"
 	"github.com/oklog/ulid/v2"
 )
 
 type PostUsecase struct {
-	PostRepo *repository.PostRepo
+	PostRepo    *repository.PostRepo
+	UserNotifer *shared.UserNotifier
 }
 
-func NewPostUsecase(pr *repository.PostRepo) *PostUsecase {
-	return &PostUsecase{PostRepo: pr}
+func NewPostUsecase(pr *repository.PostRepo, un *shared.UserNotifier) *PostUsecase {
+	return &PostUsecase{
+		PostRepo:    pr,
+		UserNotifer: un,
+	}
 }
 
 func (pu *PostUsecase) Create(post *model.CreatePost) error {
@@ -65,7 +70,7 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 	fmt.Println(foundPost.FoundID)
 	foundidUlid, err := ulid.Parse(foundPost.FoundID)
 	if err != nil {
-		fmt.Println("unmarshling error")
+		fmt.Println("unmarshalling error")
 		return err
 	}
 
@@ -73,6 +78,15 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 	if err != nil {
 		return err
 	}
+
+	//get the post
+	foundPostEntity, err := pu.PostRepo.GetPostByID(foundPost.ID)
+	if err != nil {
+		return err
+	}
+
+	//notify the owner
+	pu.UserNotifer.NotifyObserver(foundPostEntity.OwnerID.String(), foundPost.FoundID, "foundPet")
 
 	return nil
 }

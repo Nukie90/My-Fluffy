@@ -11,14 +11,14 @@ import (
 // UserUsecase is the usecase for users
 type UserUsecase struct {
 	UserRepo     *repository.UserRepo
-	UserCreation *shared.UserCreationNotifier
+	UserNotifier *shared.UserNotifier
 }
 
 // NewUserUsecase creates a new UserUsecase
-func NewUserUsecase(ur *repository.UserRepo, uc *shared.UserCreationNotifier) *UserUsecase {
+func NewUserUsecase(ur *repository.UserRepo, un *shared.UserNotifier) *UserUsecase {
 	return &UserUsecase{
 		UserRepo:     ur,
-		UserCreation: uc,
+		UserNotifier: un,
 	}
 }
 
@@ -35,7 +35,7 @@ func (uu *UserUsecase) Create(user *model.Signup) error {
 		return err
 	}
 
-	uu.UserCreation.NotifyObserver(user.Username, "createUser")
+	uu.UserNotifier.NotifyObserver("", user.Username, "createUser")
 
 	return nil
 }
