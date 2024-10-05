@@ -2,15 +2,15 @@ package shared
 
 import "fmt"
 
-type UserCreationNotifier struct {
+type UserNotifier struct {
 	Observers []Observer
 }
 
-func (ucn *UserCreationNotifier) Register(observer Observer) {
+func (ucn *UserNotifier) Register(observer Observer) {
 	ucn.Observers = append(ucn.Observers, observer)
 }
 
-func (ucn *UserCreationNotifier) Unregister(observer Observer) {
+func (ucn *UserNotifier) Unregister(observer Observer) {
 	for i, o := range ucn.Observers {
 		if o == observer {
 			ucn.Observers = append(ucn.Observers[:i], ucn.Observers[i+1:]...)
@@ -19,12 +19,12 @@ func (ucn *UserCreationNotifier) Unregister(observer Observer) {
 	}
 }
 
-func (ucn *UserCreationNotifier) NotifyObserver(username string, t string) {
+func (ucn *UserNotifier) NotifyObserver(receiver string, sender string, notificationType string) {
 	fmt.Println("Notifying observers")
 	for _, o := range ucn.Observers {
-		err := o.Update(username, t)
+		err := o.Update(receiver, sender, notificationType)
 		if err != nil {
-			return
+			fmt.Println(err)
 		}
 	}
 }

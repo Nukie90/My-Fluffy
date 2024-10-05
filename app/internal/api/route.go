@@ -35,6 +35,11 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 				post.Put("/found", r.postHandler.FoundPet)
 				post.Get("/feed", r.postHandler.GetPaginatedPosts)
 			}
+			noti := v1.Group("/notifications")
+			{
+				noti.Get("/", r.userHandler.GetNotifications)
+				noti.Delete("/:id", r.userHandler.DeleteNotification)
+			}
 		}
 	}
 }

@@ -4,21 +4,24 @@ import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/shared"
+	"github.com/oklog/ulid/v2"
 
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
 )
 
 // UserUsecase is the usecase for users
 type UserUsecase struct {
-	UserRepo     *repository.UserRepo
-	UserCreation *shared.UserCreationNotifier
+	UserRepo       *repository.UserRepo
+	AdminNotifier  *shared.UserNotifier
+	ClientNotifier *shared.UserNotifier
 }
 
 // NewUserUsecase creates a new UserUsecase
-func NewUserUsecase(ur *repository.UserRepo, uc *shared.UserCreationNotifier) *UserUsecase {
+func NewUserUsecase(ur *repository.UserRepo, an *shared.UserNotifier, cn *shared.UserNotifier) *UserUsecase {
 	return &UserUsecase{
-		UserRepo:     ur,
-		UserCreation: uc,
+		UserRepo:       ur,
+		AdminNotifier:  an,
+		ClientNotifier: cn,
 	}
 }
 
@@ -35,7 +38,7 @@ func (uu *UserUsecase) Create(user *model.Signup) error {
 		return err
 	}
 
-	uu.UserCreation.NotifyObserver(user.Username, "createUser")
+	uu.AdminNotifier.NotifyObserver("", user.Username, "createUser")
 
 	return nil
 }
@@ -73,4 +76,40 @@ func (uu *UserUsecase) Login(loginInfo *model.Login) (model.User, error) {
 		Password: user.Password,
 		Role:     user.Role,
 	}, nil
+}
+
+// GetNotifications gets all notifications for a user
+func (uu *UserUsecase) GetNotifications(userID string) ([]model.Notification, error) {
+	userIDUlid, err := ulid.Parse(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	notifications, err := uu.UserRepo.ListNotifications(userIDUlid)
+	if err != nil {
+		return nil, err
+	}
+
+	var notificationsModel []model.Notification
+	for _, notification := range notifications {
+		timeStr := notification.CreatedAt.Format("2006-01-02 15:04:05")
+		notificationsModel = append(notificationsModel, model.Notification{
+			ID:       notification.ID,
+			OwnerID:  notification.UserID.String(),
+			Message:  notification.Message,
+			CreateAt: timeStr,
+		})
+	}
+
+	return notificationsModel, nil
+}
+
+// Delete Notification deletes a notification
+func (uu *UserUsecase) DeleteNotification(notificationID uint) error {
+	err := uu.UserRepo.DeleteNotification(notificationID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
