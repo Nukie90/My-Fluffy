@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-light-purple: #C4C3E3;
+  --color-dark-purple: #504E76;
+  --color-light-yellow: #FDF8E2;
+  --color-green: #A3B565;
+  --color-yellow: #FCDD9D;
+  --color-orange: #F1642E;
+}
+
+.colorct-light-purple {
+  color: var(--color-light-purple);
+}
+
+.colorct-dark-purple {
+  color: var(--color-dark-purple);
+}
+
+.colorct-light-yellow {
+  color: var(--color-light-yellow);
+}
+
+.colorct-green {
+  color: var(--color-green);
+}
+
+.colorct-yellow {
+  color: var(--color-yellow);
+}
+
+.colorct-orange {
+  color: var(--color-orange);
+}
+
+.bgct-light-purple {
+  background-color: var(--color-light-purple);
+}
+
+.bgct-dark-purple {
+  background-color: var(--color-dark-purple);
+}
+
+.bgct-light-yellow {
+  background-color: var(--color-light-yellow);
+}
+
+.bgct-green {
+  background-color: var(--color-green);
+}
+
+.bgct-yellow {
+  background-color: var(--color-yellow);
+}
+
+.bgct-orange {
+  background-color: var(--color-orange);
+}
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
