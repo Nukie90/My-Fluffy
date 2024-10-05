@@ -46,7 +46,7 @@ function Home({CurrentPage, setCurrentPage}) {
     ">
         <div className='h-auto pt-4 pb-20'>
           <div className='h-auto'>
-            <h1 className='sm:text-xl md:text-2xl font-bold'>Posts</h1>
+            <h1 className='sm:text-xl md:text-2xl font-bold text-[#504E76]'>Posts</h1>
           </div>
           <Posts data={data} />
         </div>
