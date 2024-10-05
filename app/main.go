@@ -74,14 +74,14 @@ func (a *App) Start(name, value, usage string) {
 	realRouter := api.NewRouter(&userHandler, &postHandler)
 	routerProxy := api.NewRouterProxy(realRouter)
 
-	routerProxy.SetupRoutes(a.App)
-
 	a.Get("/swagger/*", fiberSwagger.WrapHandler)
 
 	a.Use(cors.New(cors.Config{
 		AllowCredentials: true,
-		AllowOrigins:     "http://127.0.0.1:3001",
+		AllowOrigins:     "http://localhost:3001, http://127.0.0.1:3001",
 	}))
+
+	routerProxy.SetupRoutes(a.App)
 
 	err = a.Listen(":3000")
 	if err != nil {
