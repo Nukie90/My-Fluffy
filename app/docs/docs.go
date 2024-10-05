@@ -380,22 +380,35 @@ const docTemplate = `{
                 }
             }
         },
-
         "model.Notification": {
             "type": "object",
             "properties": {
-
+                "create_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-
                 "message": {
                     "type": "string"
                 },
                 "owner_id": {
-
+                    "type": "string"
+                }
+            }
+        },
+        "model.Post": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "found_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
                 "owner_id": {
                     "type": "string"
                 },

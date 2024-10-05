@@ -16,7 +16,37 @@ definitions:
         example: john_doe
         type: string
     type: object
-
+  model.Notification:
+    properties:
+      create_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      owner_id:
+        type: string
+    type: object
+  model.Post:
+    properties:
+      content:
+        type: string
+      found_id:
+        type: string
+      id:
+        type: integer
+      owner_id:
+        type: string
+      picture:
+        items:
+          type: integer
+        type: array
+      reward:
+        type: number
+      status:
+        type: string
+      title:
+        type: string
     type: object
   model.Signup:
     properties:
