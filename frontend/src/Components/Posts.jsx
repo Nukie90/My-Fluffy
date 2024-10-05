@@ -57,7 +57,7 @@ export default function Posts({ data }) {
               <div className='w-1/2 flex items-center'>
                 <img src={RewardIcon} alt='reward_icon' className='w-4 h-4' />
                 <h2 className='text-md colorct-dark-purple font-semibold mx-2'>Reward:</h2>
-                <h1>{post.Reward || 'N/A'}</h1> {/* Adjust accordingly if Reward is part of the new structure */}
+                <h1>{post.reward || 'N/A'}</h1> {/* Adjust accordingly if Reward is part of the new structure */}
               </div>
               <div className='w-1/2 flex items-center justify-end'>
                 {post.status === 'Lost' ? ( // Adjusted to use the status field
