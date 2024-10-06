@@ -33,8 +33,11 @@ func NewPostHandler(pu *business.PostUsecase) *PostHandler {
 //	@Router			/posts [post]
 func (ph *PostHandler) CreatePost(c *fiber.Ctx) error {
 	title := c.FormValue("title")
+	fmt.Println(title)
 	content := c.FormValue("content")
+	fmt.Println(content)
 	reward := c.FormValue("reward")
+	fmt.Println(reward)
 	//reward string to float64
 	rewardFloat, err := strconv.ParseFloat(reward, 64)
 	if err != nil {
@@ -65,6 +68,7 @@ func (ph *PostHandler) CreatePost(c *fiber.Ctx) error {
 	cookie := c.Cookies("session")
 	post.OwnerID = cookie
 	post.Reward = rewardFloat
+
 
 	if err := c.BodyParser(&post); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
