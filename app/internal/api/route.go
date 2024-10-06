@@ -6,14 +6,16 @@ import (
 )
 
 type Router struct {
-	userHandler *presentation.UserHandler
-	postHandler *presentation.PostHandler
+	userHandler    *presentation.UserHandler
+	postHandler    *presentation.PostHandler
+	paymentHandler *presentation.PaymentHandler
 }
 
-func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler) *Router {
+func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler, pmh *presentation.PaymentHandler) *Router {
 	return &Router{
 		userHandler: uh,
 		postHandler: ph,
+		paymentHandler: pmh,
 	}
 }
 
@@ -33,6 +35,11 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 				post.Post("/", r.postHandler.CreatePost)
 				post.Get("/user", r.postHandler.GetPostsFromSpecificUser)
 				post.Put("/found", r.postHandler.FoundPet)
+			}
+			payment := v1.Group("/payments")
+			{
+				payment.Post("/", r.paymentHandler.CreateUserPayment)
+				payment.Get("/user", r.paymentHandler.GetPaymentsFromSpecificUser)
 			}
 		}
 	}

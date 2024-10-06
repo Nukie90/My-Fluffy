@@ -61,6 +61,7 @@ func (a *App) Start(name, value, usage string) {
 	//Initialize the repository, notifier and service
 	userRepo := repository.UserRepo{DB: db}
 	postRepo := repository.PostRepo{DB: db}
+	paymentRepo := repository.PaymentRepo{DB: db}
 	notifier := shared.UserCreationNotifier{}
 	adminNotifier := business.NewAdminNotifier(&userRepo)
 	notifier.Register(adminNotifier)
@@ -71,7 +72,13 @@ func (a *App) Start(name, value, usage string) {
 	postUsecase := business.NewPostUsecase(&postRepo)
 	postHandler := presentation.PostHandler{PostUsecase: postUsecase}
 
-	router := api.NewRouter(&userHandler, &postHandler)
+	paymentGateway := business.PayPalAdapter{}
+	paymentUsecase := business.NewPaymentUsecase(&paymentRepo, &paymentGateway)
+	paymentHandler := presentation.PaymentHandler{PaymentUsecase:      		paymentUsecase}
+		
+	
+
+	router := api.NewRouter(&userHandler, &postHandler, &paymentHandler)
 
 	router.SetupRoutes(a.App)
 

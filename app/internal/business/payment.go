@@ -38,8 +38,15 @@ func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error 
 	return nil
 }
 
-func (pu *PaymentUsecase) GetPaymentsFromSpecificUser(userID ulid.ULID) ([]entity.Payment, error) {
-	payments, err := pu.PaymentRepo.GetPaymentFromSpecificUser(userID)
+func (pu *PaymentUsecase) GetPaymentsFromSpecificUser(userID string) ([]entity.Payment, error) {
+
+	//to ulid
+	useridUlid, err := ulid.Parse(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	payments, err := pu.PaymentRepo.GetPaymentFromSpecificUser(useridUlid)
 	if err != nil {
 		return nil, err
 	}
