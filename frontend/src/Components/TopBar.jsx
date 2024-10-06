@@ -24,13 +24,13 @@ function TopBar({CurrentPage, setCurrentPage}) {
                 const response = await axios.get('http://localhost:3000/api/v1/notifications', {
                     withCredentials: true, // Ensure credentials are included in the request
                 });
-                const notifications = response.data;
+                const notifications = response.data || [];
 
                 // Update state with the fetched notifications
                 setNoti(notifications);
                 
                 // Count unread notifications
-                setUnReadNoti(notifications.filter(noti => !noti.isRead).length);
+                if (notifications && notifications.length > 0) setUnReadNoti(notifications.filter(noti => !noti.isRead).length);
             } catch (error) {
                 console.error('Error fetching notifications:', error);
             }

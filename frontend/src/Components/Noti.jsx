@@ -76,7 +76,11 @@ export default function Noti({ noti, setIsNotiVisible }) {
                         </div>
                     </div>  
                 ))}
-
+                {notifications.length === 0 && (
+                    <div className='h-32 w-11/12 m-4 mb-1 p-4 flex flex-col items-center justify-center rounded-xl'>
+                        <p className='text-md colorct-dark-purple'>No notifications</p>
+                    </div>
+                )}
             </div>
         </div>
     );
