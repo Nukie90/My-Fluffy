@@ -1,5 +1,7 @@
 package shared
 
+import "github.com/Nukie90/my-fluffy/app/domain/model"
+
 type Subject interface {
 	Register(observer Observer)
 	Unregister(observer Observer)
@@ -8,4 +10,8 @@ type Subject interface {
 
 type Observer interface {
 	Update(string, string) error
+}
+
+type PaymentGateway interface {
+    ProcessPayment(payment *model.CreatePayment) error
 }

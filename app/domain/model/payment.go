@@ -11,3 +11,9 @@ type Payment struct {
 	Transaction string  `json:"transaction"`
 	UserID      string  `json:"user_id"`
 }
+
+type PayPalPayment struct {
+    Amount      float64 
+    Transaction string
+    UserID      string
+}
