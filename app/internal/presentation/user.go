@@ -141,7 +141,7 @@ func (uh *UserHandler) DeleteNotification(c *fiber.Ctx) error {
 //	@Param			id	path	string	true	"User ID"
 //	@Produce		json
 //	@Success		200	{object}	model.User	"User details"
-//	@Failure		400	{string}	string	"Bad request"
+//	@Failure		400	{string}	string		"Bad request"
 //	@Router			/users/{id} [get]
 func (uh *UserHandler) GetUserByID(c *fiber.Ctx) error {
 	userID := c.Params("id")

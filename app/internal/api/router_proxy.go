@@ -16,7 +16,7 @@ type RouterProxy struct {
 func NewRouterProxy(realRouter *Router) *RouterProxy {
 	proxy := &RouterProxy{
 		realRouter:  realRouter,
-		maxAllowed:  10,
+		maxAllowed:  50,
 		rateLimiter: make(map[string]int),
 		resetTime:   30 * time.Second,
 	}

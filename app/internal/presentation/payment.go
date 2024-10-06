@@ -48,7 +48,7 @@ func (ph *PaymentHandler) CreateUserPayment(c *fiber.Ctx) error {
 //	@Param			userID	path	string	true	"User ID"
 //	@Produce		json
 //	@Success		200	{array}		model.Payment	"Payments from specific user"
-//	@Failure		400	{string}	string	"Bad request"
+//	@Failure		400	{string}	string			"Bad request"
 //	@Router			/payments/user/{userID} [get]
 func (ph *PaymentHandler) GetPaymentsFromSpecificUser(c *fiber.Ctx) error {
 	userID := c.Params("userID")
