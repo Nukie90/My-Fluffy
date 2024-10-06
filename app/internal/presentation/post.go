@@ -69,7 +69,6 @@ func (ph *PostHandler) CreatePost(c *fiber.Ctx) error {
 	post.OwnerID = cookie
 	post.Reward = rewardFloat
 
-
 	if err := c.BodyParser(&post); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -145,14 +144,18 @@ func (ph *PostHandler) FoundPet(c *fiber.Ctx) error {
 //	@Failure		400		{string}	string		"Bad request"
 //	@Router			/posts/feed [get]
 func (ph *PostHandler) GetPaginatedPosts(c *fiber.Ctx) error {
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil || page < 1 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid page number"})
+	page, err := strconv.Atoi(c.Query("page", "1"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid page number",
+		})
 	}
 
 	posts, err := ph.PostUsecase.GetPaginatedPosts(page)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to fetch posts",
+		})
 	}
 
 	return c.JSON(posts)

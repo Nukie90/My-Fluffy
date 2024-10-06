@@ -54,7 +54,7 @@ export default function Posts({ data, savedPosts }) {
                 <div className='flex items-center'>
                   <img src={post.OwnerPicture || '/Profiles/default_pfp.jpg'} alt={post.OwnerPicture} className='w-10 h-10 rounded-full' />
                   <div className='w-1/2 flex flex-col ml-2'>
-                    <h1 className='text-sm font-semibold colorct-dark-purple'>{post.Owner || 'Unknown'}</h1>
+                    <h1 className='text-sm font-semibold colorct-dark-purple'>{post.username || 'Unknown'}</h1>
                   </div>
                 </div>
               </div>

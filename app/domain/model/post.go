@@ -23,3 +23,15 @@ type FoundPost struct {
 	ID      uint   `json:"id"`
 	FoundID string `json:"found_id"`
 }
+
+type PaginatedPostWithUsername struct {
+	ID       uint    `json:"id"`
+	Username string  `json:"username"`
+	Title    string  `json:"title"`
+	Content  string  `json:"content"`
+	Status   string  `json:"status"`
+	Picture  []byte  `json:"picture"`
+	OwnerID  string  `json:"owner_id"`
+	FoundID  string  `json:"found_id"`
+	Reward   float64 `json:"reward"`
+}

@@ -96,28 +96,15 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 	return nil
 }
 
-func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.Post, error) {
+func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.PaginatedPostWithUsername, error) {
 	const postsPerPage = 10
 	offset := (page - 1) * postsPerPage
 
+	// Call the new repository method
 	posts, err := pu.PostRepo.GetPaginatedPosts(postsPerPage, offset)
 	if err != nil {
 		return nil, err
 	}
 
-	var postsModel []model.Post
-	for _, post := range posts {
-		postsModel = append(postsModel, model.Post{
-			ID:      post.ID,
-			Title:   post.Title,
-			Content: post.Content,
-			Status:  post.Status,
-			Picture: post.Picture,
-			Reward:  post.Reward,
-			OwnerID: post.OwnerID.String(),
-			FoundID: post.FoundID.String(),
-		})
-	}
-
-	return postsModel, nil
+	return posts, nil
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
+	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/oklog/ulid/v2"
 	"gorm.io/gorm"
 )
@@ -53,12 +54,20 @@ func (pr *PostRepo) GetPostByID(postID uint) (*entity.Post, error) {
 	return &post, nil
 }
 
-func (pr *PostRepo) GetPaginatedPosts(limit int, offset int) ([]entity.Post, error) {
-    var posts []entity.Post
-    result := pr.DB.Order("created_at desc").Limit(limit).Offset(offset).Find(&posts)
-    if result.Error != nil {
-        return nil, result.Error
-    }
+func (pr *PostRepo) GetPaginatedPosts(limit int, offset int) ([]model.PaginatedPostWithUsername, error) {
+	var posts []model.PaginatedPostWithUsername
 
-    return posts, nil
+	// Join the posts and users table, selecting the username
+	result := pr.DB.Table("posts").
+		Select("posts.*, users.username").
+		Joins("left join users on users.id = posts.owner_id").
+		Order("posts.created_at desc").
+		Limit(limit).Offset(offset).
+		Scan(&posts)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return posts, nil
 }
