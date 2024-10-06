@@ -252,6 +252,27 @@ paths:
       summary: Get posts from specific user
       tags:
       - posts
+  /saved_posts:
+    get:
+      consumes:
+      - application/json
+      description: Get all saved posts by user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved posts with details
+          schema:
+            items:
+              $ref: '#/definitions/model.Post'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get all saved posts by user
+      tags:
+      - saved_posts
   /savedPost/saved_posts:
     post:
       consumes:
@@ -282,37 +303,6 @@ paths:
       summary: Create a new saved post
       tags:
       - saved_posts
-  /savedPost/saved_posts/{user_id}:
-    get:
-      consumes:
-      - application/json
-      description: Get all saved posts for a specific user by user ID
-      parameters:
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: List of saved posts
-          schema:
-            items:
-              $ref: '#/definitions/model.SavedPost'
-            type: array
-        "404":
-          description: Not found
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Retrieve all saved posts for a user
-      tags:
-      - saved_posts
   /users:
     post:
       consumes:
@@ -337,6 +327,29 @@ paths:
           schema:
             type: string
       summary: Create a new user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get user by ID
       tags:
       - users
   /users/all:

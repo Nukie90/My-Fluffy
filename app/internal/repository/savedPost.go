@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/oklog/ulid/v2"
 	"gorm.io/gorm"
@@ -28,24 +26,18 @@ func (spr *SavedPostRepo) Create(savedPost *entity.SavedPost) error {
 	return nil
 }
 
-// FindAll finds all saved posts for a specific user
-func (spr *SavedPostRepo) FindAllByUser(userID string) ([]entity.SavedPost, error) {
-	var savedPosts []entity.SavedPost
+func (pr *SavedPostRepo) GetAllSavedPostsByUser(userID ulid.ULID) ([]entity.Post, error) {
+	var posts []entity.Post
+	// Unscoped() ensures GORM doesn't check for deleted_at in saved_posts
+	result := pr.DB.Unscoped().Table("saved_posts").
+		Select("posts.*").
+		Joins("join posts on saved_posts.post_id = posts.id").
+		Where("saved_posts.user_id = ?", userID).
+		Find(&posts)
 
-	// Convert userID string to ulid.ULID
-	userIDUlid, err := ulid.Parse(userID)
-	if err != nil {
-		return nil, fmt.Errorf("invalid user_id format: %w", err)
-	}
-
-	fmt.Printf("Finding saved posts for userID: %s\n", userID)
-
-	result := spr.DB.Where("user_id = ?", userIDUlid).Find(&savedPosts)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	fmt.Printf("Rows affected: %d\n", result.RowsAffected)
-
-	return savedPosts, nil
+	return posts, nil
 }

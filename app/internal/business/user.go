@@ -113,3 +113,23 @@ func (uu *UserUsecase) DeleteNotification(notificationID uint) error {
 
 	return nil
 }
+
+// GetUserByID retrieves a user by their ID
+func (uu *UserUsecase) GetUserByID(userID string) (model.User, error) {
+	userIDUlid, err := ulid.Parse(userID)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	user, err := uu.UserRepo.FindByID(userIDUlid.String())
+	if err != nil {
+		return model.User{}, err
+	}
+
+	return model.User{
+		ID:       user.ID.String(),
+		Username: user.Username,
+		Password: user.Password,
+		Role:     user.Role,
+	}, nil
+}

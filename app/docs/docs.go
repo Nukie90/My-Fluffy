@@ -297,9 +297,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/savedPost/saved_posts/{user_id}": {
+        "/saved_posts": {
             "get": {
-                "description": "Get all saved posts for a specific user by user ID",
+                "description": "Get all saved posts by user",
                 "consumes": [
                     "application/json"
                 ],
@@ -309,36 +309,21 @@ const docTemplate = `{
                 "tags": [
                     "saved_posts"
                 ],
-                "summary": "Retrieve all saved posts for a user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Get all saved posts by user",
                 "responses": {
                     "200": {
-                        "description": "List of saved posts",
+                        "description": "Saved posts with details",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.SavedPost"
+                                "$ref": "#/definitions/model.Post"
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found",
+                    "400": {
+                        "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/model.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/model.ErrorResponse"
+                            "type": "string"
                         }
                     }
                 }
@@ -436,6 +421,41 @@ const docTemplate = `{
                         "description": "Login successful",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "Get user by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
                         }
                     },
                     "400": {

@@ -61,27 +61,24 @@ func (sh *SavedPostHandler) CreateSavedPost(c *fiber.Ctx) error {
 	return c.JSON(model.SuccessResponse{Message: "Saved post created successfully"})
 }
 
-// GetAllSavedPostsByUser retrieves all saved posts for a specific user.
-// @Summary      Retrieve all saved posts for a user
-// @Description  Get all saved posts for a specific user by user ID
-// @Tags         saved_posts
-// @Accept       json
-// @Param        user_id path string true "User ID"
-// @Produce      json
-// @Success      200  {array}  model.SavedPost "List of saved posts"
-// @Failure      404  {object}  model.ErrorResponse "Not found"
-// @Failure      500  {object}  model.ErrorResponse "Internal server error"
-// @Router       /savedPost/saved_posts/{user_id} [get]
-func (sh *SavedPostHandler) GetAllSavedPostsByUser(c *fiber.Ctx) error {
-	userID := c.Params("user_id")
+// GetAllSavedPostsByUser godoc
+//
+//	@Summary		Get all saved posts by user
+//	@Description	Get all saved posts by user
+//	@Tags			saved_posts
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{array}		model.Post	"Saved posts with details"
+//	@Failure		400		{string}	string		"Bad request"
+//	@Router			/saved_posts [get]
+func (ph *SavedPostHandler) GetAllSavedPostsByUser(c *fiber.Ctx) error {
+	cookie := c.Cookies("session")
+	userID := cookie
 
-	// Call usecase to get saved posts
-	savedPosts, err := sh.SavedPostUsecase.GetAllByUser(userID)
+	posts, err := ph.SavedPostUsecase.GetAllSavedPostsByUser(userID)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(savedPosts)
+	return c.JSON(posts)
 }

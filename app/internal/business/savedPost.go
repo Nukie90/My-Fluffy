@@ -4,6 +4,7 @@ import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
+	"github.com/oklog/ulid/v2"
 )
 
 // SavedPostUsecase is the usecase for saved posts
@@ -25,20 +26,31 @@ func (spu *SavedPostUsecase) Create(savedPost *entity.SavedPost) error {
 	return nil
 }
 
-// GetAllByUser retrieves all saved posts for a user
-func (spu *SavedPostUsecase) GetAllByUser(userID string) ([]model.SavedPost, error) {
-	savedPosts, err := spu.SavedPostRepo.FindAllByUser(userID)
+func (pu *SavedPostUsecase) GetAllSavedPostsByUser(userID string) ([]model.Post, error) {
+	useridUlid, err := ulid.Parse(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	var savedPostsModel []model.SavedPost
-	for _, sp := range savedPosts {
-		savedPostsModel = append(savedPostsModel, model.SavedPost{
-			UserID: sp.UserID.String(),
-			PostID: sp.PostID,
+	// Fetch full post details from repository
+	posts, err := pu.SavedPostRepo.GetAllSavedPostsByUser(useridUlid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert to model.Post type
+	var postsModel []model.Post
+	for _, post := range posts {
+		postsModel = append(postsModel, model.Post{
+			ID:      post.ID,
+			Title:   post.Title,
+			Content: post.Content,
+			Picture: post.Picture,
+			Reward:  post.Reward,
+			OwnerID: post.OwnerID.String(),
+			FoundID: post.FoundID.String(),
 		})
 	}
 
-	return savedPostsModel, nil
+	return postsModel, nil
 }

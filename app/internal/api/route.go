@@ -28,6 +28,7 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 			{
 				users.Post("/", r.userHandler.CreateUser)
 				users.Get("/all", r.userHandler.GetAllUser)
+				users.Get("/:id", r.userHandler.GetUserByID)
 				users.Post("/login", r.userHandler.Login)
 			}
 			post := v1.Group("/posts")

@@ -132,3 +132,22 @@ func (uh *UserHandler) DeleteNotification(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{"message": "Notification deleted"})
 }
+
+// GetUserByID godoc
+//
+//	@Summary		Get user by ID
+//	@Description	Get user by ID
+//	@Tags			users
+//	@Param			id	path	string	true	"User ID"
+//	@Produce		json
+//	@Success		200	{object}	model.User	"User details"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/users/{id} [get]
+func (uh *UserHandler) GetUserByID(c *fiber.Ctx) error {
+	userID := c.Params("id")
+	user, err := uh.UserUsecase.GetUserByID(userID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(user)
+}
