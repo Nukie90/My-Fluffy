@@ -24,13 +24,60 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+
+        "/payments": {
+            "post": {
+                "description": "Create a new payment",
+                "consumes": [
+                    "application/json"
+                ],
+
         "/notifications": {
             "get": {
                 "description": "Get all notifications for current user",
+
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
+
+                    "payments"
+                ],
+                "summary": "Create a new payment",
+                "parameters": [
+                    {
+                        "description": "Payment information",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreatePayment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/payments/user/{userID}": {
+            "get": {
+                "description": "Get payments from specific user",
+                "consumes": [
+                    "application/json"
+                ],
+
                     "notifications"
                 ],
                 "summary": "Get all notifications",
@@ -50,10 +97,21 @@ const docTemplate = `{
         "/notifications/{id}": {
             "delete": {
                 "description": "Delete a notification",
+
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
+
+                    "payments"
+                ],
+                "summary": "Get payments from specific user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userID",
+
                     "notifications"
                 ],
                 "summary": "Delete a notification",
@@ -62,15 +120,25 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Notification ID",
                         "name": "id",
+
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
                     "200": {
+
+                        "description": "Payments from specific user",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Payment"
+                            }
+
                         "description": "Notification deleted",
                         "schema": {
                             "type": "string"
+
                         }
                     },
                     "400": {
@@ -469,10 +537,23 @@ const docTemplate = `{
         }
     },
     "definitions": {
+
+        "model.CreatePayment": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "transaction": {
+                    "type": "string"
+                },
+                "user_id": {
+
         "model.ErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {
+
                     "type": "string"
                 }
             }
@@ -501,6 +582,20 @@ const docTemplate = `{
                 }
             }
         },
+
+        "model.Payment": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "transaction": {
+                    "type": "string"
+                },
+
         "model.Notification": {
             "type": "object",
             "properties": {

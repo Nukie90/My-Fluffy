@@ -48,6 +48,11 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 				noti.Get("/", r.userHandler.GetNotifications)
 				noti.Delete("/:id", r.userHandler.DeleteNotification)
 			}
+			payment := v1.Group("/payments")
+			{
+				payment.Post("/", r.paymentHandler.CreateUserPayment)
+				payment.Get("/user", r.paymentHandler.GetPaymentsFromSpecificUser)
+			}
 		}
 	}
 }

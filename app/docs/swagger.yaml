@@ -1,8 +1,18 @@
 basePath: /api/v1
 definitions:
+
+  model.CreatePayment:
+    properties:
+      amount:
+        type: number
+      transaction:
+        type: string
+      user_id:
+
   model.ErrorResponse:
     properties:
       error:
+
         type: string
     type: object
   model.FoundPost:
@@ -21,6 +31,16 @@ definitions:
         example: john_doe
         type: string
     type: object
+
+  model.Payment:
+    properties:
+      amount:
+        type: number
+      id:
+        type: string
+      transaction:
+        type: string
+
   model.Notification:
     properties:
       create_at:
@@ -57,6 +77,7 @@ definitions:
     properties:
       post_id:
         type: integer
+
       user_id:
         type: string
     type: object
@@ -102,13 +123,49 @@ info:
   title: SDA My Fluffy API
   version: "1.0"
 paths:
+
+  /payments:
+    post:
+      consumes:
+      - application/json
+      description: Create a new payment
+      parameters:
+      - description: Payment information
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatePayment'
+
   /notifications:
     get:
       description: Get all notifications for current user
+
       produces:
       - application/json
       responses:
         "200":
+
+          description: Payment created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Create a new payment
+      tags:
+      - payments
+  /payments/user/{userID}:
+    get:
+      consumes:
+      - application/json
+      description: Get payments from specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+
           description: List of notifications
           schema:
             items:
@@ -124,22 +181,37 @@ paths:
       - description: Notification ID
         in: path
         name: id
+
         required: true
         type: string
       produces:
       - application/json
       responses:
         "200":
+
+          description: Payments from specific user
+          schema:
+            items:
+              $ref: '#/definitions/model.Payment'
+            type: array
+
           description: Notification deleted
           schema:
             type: string
+
         "400":
           description: Bad request
           schema:
             type: string
+
+      summary: Get payments from specific user
+      tags:
+      - payments
+
       summary: Delete a notification
       tags:
       - notifications
+
   /posts:
     post:
       consumes:

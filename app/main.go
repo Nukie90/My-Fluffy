@@ -82,6 +82,7 @@ func (a *App) Start(name, value, usage string) {
 	realRouter := api.NewRouter(&userHandler, &postHandler, &savedPostHandler)
 	routerProxy := api.NewRouterProxy(realRouter)
 
+
 	routerProxy.SetupRoutes(a.App)
 
 	a.Get("/swagger/*", fiberSwagger.WrapHandler)
