@@ -22,9 +22,11 @@ export default function Posts({ data, savedPosts }) {
     try {
       if (isSaved) {
         await axios.delete(`http://localhost:3000/api/v1/saved_posts`, {
-          data: { post_id: id },
+          data: {
+            post_id: id,
+          },
           withCredentials: true,
-        });
+        });        
       } else {
         await axios.post(`http://localhost:3000/api/v1/saved_posts`, {
           post_id: id,

@@ -64,24 +64,25 @@ func (sh *SavedPostHandler) CreateSavedPost(c *fiber.Ctx) error {
 
 // GetAllSavedPostsByUser godoc
 //
-//	@Summary		Get all saved posts by user
-//	@Description	Get all saved posts by user
+//	@Summary		Get all saved posts by user with details
+//	@Description	Get all saved posts by user with details
 //	@Tags			saved_posts
 //	@Accept			json
 //	@Produce		json
-//	@Success		200		{array}		model.Post	"Saved posts with details"
+//	@Success		200		{array}		model.PostWithUsername	"Saved posts with details including usernames"
 //	@Failure		400		{string}	string		"Bad request"
 //	@Router			/saved_posts [get]
 func (ph *SavedPostHandler) GetAllSavedPostsByUser(c *fiber.Ctx) error {
 	cookie := c.Cookies("session")
 	userID := cookie
 
-	posts, err := ph.SavedPostUsecase.GetAllSavedPostsByUser(userID)
+	// Fetch saved posts with usernames
+	savedPosts, err := ph.SavedPostUsecase.GetAllSavedPostsByUserWithDetails(userID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(posts)
+	return c.JSON(savedPosts)
 }
 
 // UnsavePost handles the unsaving of a saved post.

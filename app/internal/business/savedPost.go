@@ -26,34 +26,19 @@ func (spu *SavedPostUsecase) Create(savedPost *entity.SavedPost) error {
 	return nil
 }
 
-func (pu *SavedPostUsecase) GetAllSavedPostsByUser(userID string) ([]model.Post, error) {
+func (spu *SavedPostUsecase) GetAllSavedPostsByUserWithDetails(userID string) ([]model.PostWithUsername, error) {
 	useridUlid, err := ulid.Parse(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Fetch full post details from repository
-	posts, err := pu.SavedPostRepo.GetAllSavedPostsByUser(useridUlid)
+	// Fetch saved posts with usernames from the repository
+	savedPosts, err := spu.SavedPostRepo.GetAllSavedPostsWithUsernames(useridUlid)
 	if err != nil {
 		return nil, err
 	}
 
-	// Convert to model.Post type
-	var postsModel []model.Post
-	for _, post := range posts {
-		postsModel = append(postsModel, model.Post{
-			ID:      post.ID,
-			Title:   post.Title,
-			Content: post.Content,
-			Status:  post.Status,
-			Picture: post.Picture,
-			Reward:  post.Reward,
-			OwnerID: post.OwnerID.String(),
-			FoundID: post.FoundID.String(),
-		})
-	}
-
-	return postsModel, nil
+	return savedPosts, nil
 }
 
 // Unsave removes a saved post

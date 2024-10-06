@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
+	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/oklog/ulid/v2"
 	"gorm.io/gorm"
 )
@@ -26,20 +27,21 @@ func (spr *SavedPostRepo) Create(savedPost *entity.SavedPost) error {
 	return nil
 }
 
-func (pr *SavedPostRepo) GetAllSavedPostsByUser(userID ulid.ULID) ([]entity.Post, error) {
-	var posts []entity.Post
-	// Ensure only posts saved by the specific userID are retrieved
-	result := pr.DB.Table("saved_posts").
-		Select("posts.*").
+func (spr *SavedPostRepo) GetAllSavedPostsWithUsernames(userID ulid.ULID) ([]model.PostWithUsername, error) {
+	var savedPosts []model.PostWithUsername
+
+	result := spr.DB.Table("saved_posts").
+		Select("posts.id, posts.title, posts.content, posts.status, posts.picture, posts.reward, posts.owner_id, posts.found_id, users.username").
 		Joins("join posts on saved_posts.post_id = posts.id").
-		Where("saved_posts.user_id = ?", userID).
-		Find(&posts)
+		Joins("join users on posts.owner_id = users.id").
+		Where("saved_posts.user_id = ? AND saved_posts.deleted_at IS NULL AND posts.deleted_at IS NULL", userID).
+		Find(&savedPosts)
 
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return posts, nil
+	return savedPosts, nil
 }
 
 // Unsave removes a saved post

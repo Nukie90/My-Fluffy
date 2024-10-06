@@ -18,3 +18,15 @@ type SavedPost struct {
 type UnsavePostRequest struct {
 	PostID uint `json:"post_id" validate:"required"`
 }
+
+type PostWithUsername struct {
+	ID       uint    `json:"id"`
+	Title    string  `json:"title"`
+	Content  string  `json:"content"`
+	Status   string  `json:"status"`
+	Picture  []byte  `json:"picture"`
+	Reward   float64 `json:"reward"`
+	OwnerID  string  `json:"owner_id"`
+	FoundID  string  `json:"found_id"`
+	Username string  `json:"username"` // Add username field
+}

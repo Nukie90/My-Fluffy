@@ -25,6 +25,7 @@ function Saved({setCurrentPage}) {
         const formattedPosts = savedPosts.map(post => ({
             id: post.id,
             title: post.title,
+            username: post.username,
             content: post.content,
             status: post.status,
             picture: post.picture,
