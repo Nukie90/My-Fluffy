@@ -3,7 +3,7 @@ package model
 type Signup struct {
 	Username string `json:"username" example:"john_doe"`
 	Password string `json:"password" example:"password"`
-	Role     string `json:"role" example:"admin"`
+	Role     string `json:"role" example:""`
 }
 
 type User struct {
@@ -16,4 +16,11 @@ type User struct {
 type Login struct {
 	Username string `json:"username" example:"john_doe"`
 	Password string `json:"password" example:"password"`
+}
+
+type Notification struct {
+	ID       uint   `json:"id"`
+	OwnerID  string `json:"owner_id"`
+	Message  string `json:"message"`
+	CreateAt string `json:"create_at"`
 }

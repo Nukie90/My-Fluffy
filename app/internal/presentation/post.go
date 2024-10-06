@@ -136,7 +136,7 @@ func (ph *PostHandler) FoundPet(c *fiber.Ctx) error {
 //	@Tags			posts
 //	@Accept			json
 //	@Produce		json
-//	@Param			page	query		int	true	"Page number"
+//	@Param			page	query		int			true	"Page number"
 //	@Success		200		{array}		model.Post	"Paginated posts"
 //	@Failure		400		{string}	string		"Bad request"
 //	@Router			/posts/feed [get]
