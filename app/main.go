@@ -74,9 +74,7 @@ func (a *App) Start(name, value, usage string) {
 
 	paymentGateway := business.PayPalAdapter{}
 	paymentUsecase := business.NewPaymentUsecase(&paymentRepo, &paymentGateway)
-	paymentHandler := presentation.PaymentHandler{PaymentUsecase:      		paymentUsecase}
-		
-	
+	paymentHandler := presentation.PaymentHandler{PaymentUsecase: paymentUsecase}
 
 	router := api.NewRouter(&userHandler, &postHandler, &paymentHandler)
 
