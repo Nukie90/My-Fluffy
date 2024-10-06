@@ -2,6 +2,7 @@ package business
 
 import (
 	"fmt"
+
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
@@ -109,6 +110,7 @@ func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.Post, error) {
 			ID:      post.ID,
 			Title:   post.Title,
 			Content: post.Content,
+			Status:  post.Status,
 			Picture: post.Picture,
 			Reward:  post.Reward,
 			OwnerID: post.OwnerID.String(),
