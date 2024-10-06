@@ -61,7 +61,8 @@ export default function AddPost({ setIsAddPostVisible }) {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log('Post created:', response.data);
+            // console.log('Post created:', response.data);
+            window.location.reload();
             setIsAddPostVisible(false); // Close the modal after submission
         } catch (error) {
             console.error('Error creating post:', error.response?.data || error.message);
