@@ -10,7 +10,6 @@ function Home({ currentPage, setCurrentPage }) {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentFetchPage, setCurrentFetchPage] = useState(1); // Renamed variable
   const [hasMore, setHasMore] = useState(true); // Track if there are more posts to fetch
 

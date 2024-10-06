@@ -32,7 +32,7 @@ function Signup({currentPage, setCurrentPage}) {
             const response = await axios.post(`http://localhost:3000/api/v1/users`, {
                 username,
                 password,
-                role: 'user',
+                role: '',
             }, {
                 withCredentials: true // Include cookies with the request
             });
