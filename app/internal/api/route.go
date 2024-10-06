@@ -9,13 +9,15 @@ type Router struct {
 	userHandler      *presentation.UserHandler
 	postHandler      *presentation.PostHandler
 	savedPostHandler *presentation.SavedPostHandler
+	paymentHandler   *presentation.PaymentHandler
 }
 
-func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler, sph *presentation.SavedPostHandler) *Router {
+func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler, sph *presentation.SavedPostHandler, pmh *presentation.PaymentHandler) *Router {
 	return &Router{
 		userHandler:      uh,
 		postHandler:      ph,
 		savedPostHandler: sph,
+		paymentHandler:   pmh,
 	}
 }
 

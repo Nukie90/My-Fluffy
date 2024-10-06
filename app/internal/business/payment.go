@@ -1,6 +1,8 @@
 package business
 
 import (
+	"fmt"
+
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
@@ -12,10 +14,11 @@ import (
 type PaymentUsecase struct {
 	PaymentRepo    *repository.PaymentRepo
 	PaymentGateway shared.PaymentGateway
+	ClientNotifier *shared.UserNotifier
 }
 
-func NewPaymentUsecase(pr *repository.PaymentRepo, pg shared.PaymentGateway) *PaymentUsecase {
-	return &PaymentUsecase{PaymentRepo: pr, PaymentGateway: pg}
+func NewPaymentUsecase(pr *repository.PaymentRepo, pg shared.PaymentGateway, cn *shared.UserNotifier) *PaymentUsecase {
+	return &PaymentUsecase{PaymentRepo: pr, PaymentGateway: pg, ClientNotifier: cn}
 }
 
 func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error {
@@ -34,6 +37,8 @@ func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error 
 	if err != nil {
 		return err
 	}
+
+	pu.ClientNotifier.NotifyObserver(payment.UserID, fmt.Sprintf("%.2f", payment.Amount), "payment")
 
 	return nil
 }

@@ -62,6 +62,7 @@ func (a *App) Start(name, value, usage string) {
 	userRepo := repository.UserRepo{DB: db}
 	postRepo := repository.PostRepo{DB: db}
 	savedPostRepo := repository.SavedPostRepo{DB: db}
+	paymentRepo := repository.PaymentRepo{DB: db}
 	ANotifier := shared.UserNotifier{}
 	CNotifier := shared.UserNotifier{}
 	notificationFactory := &shared.DefaultNotificationFactory{}
@@ -78,8 +79,10 @@ func (a *App) Start(name, value, usage string) {
 
 	savedPostUsecase := business.NewSavedPostUsecase(&savedPostRepo)
 	savedPostHandler := presentation.SavedPostHandler{SavedPostUsecase: savedPostUsecase}
-
-	realRouter := api.NewRouter(&userHandler, &postHandler, &savedPostHandler)
+    paymentGateway := business.PayPalAdapter{}
+	paymentUsecase := business.NewPaymentUsecase(&paymentRepo,&paymentGateway,&CNotifier)
+	paymentHandler := presentation.PaymentHandler{PaymentUsecase: paymentUsecase}
+	realRouter := api.NewRouter(&userHandler, &postHandler, &savedPostHandler,&paymentHandler)
 	routerProxy := api.NewRouterProxy(realRouter)
 
 
