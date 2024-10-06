@@ -1,19 +1,45 @@
 import './../App.css';
+import Noti from './Noti';
 import SearchIcon from './Icons/search_icon.svg';
 import NotiIcon from './Icons/noti_icon.svg';
 import DMIcon from './Icons/dm_icon.svg';
 // import DefaultPFP from './Profiles/default_pfp.jpg';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 function TopBar({CurrentPage, setCurrentPage}) {
+    const [isNotiVisible, setIsNotiVisible] = useState(false);
+    const [unReadNoti, setUnReadNoti] = useState(0);
 
     let pfp = "/Profiles/default_pfp.jpg";
-    let dmNoti = '';
-
-    dmNoti = '2';
     const toprightIcons = [NotiIcon];
+
+    let noti = [
+        {
+            id: 1,
+            UserPicture: '/Profiles/default_pfp.jpg',
+            username: 'User1',
+            noti: 'Your pet has been found!',
+            isRead: false
+        },
+        {
+            id: 2,
+            UserPicture: '/Profiles/default_pfp.jpg',
+            username: 'User2',
+            noti: 'Your pet has been found!',
+            isRead: false
+        }
+    ];
+
+    function handleNotiClick() {
+        setIsNotiVisible(!isNotiVisible);
+        console.log(isNotiVisible);
+    }
+
+    useEffect(() => {
+        setUnReadNoti(noti.filter(noti => !noti.isRead).length);
+    }, [noti, setUnReadNoti]);
 
     return (
         <div className="fixed h-20 w-full flex text-center bg-white shadow-md items-center justify-between sm:pt-6 md:pt-0 sm:px-4 md:px-6 lg:px-8"
@@ -37,37 +63,40 @@ function TopBar({CurrentPage, setCurrentPage}) {
                 </Link>
             </div>
             <div className='flex justify-end py-5'>
-            {toprightIcons.map((icon, index) => (
-                <button
-                    className='
-                        relative flex items-center justify-center
-                        rounded-full transition-all duration-300
-                        sm:ml-4 w-6 h-6
-                        lg:ml-6 w-8 h-8
-                        xl:w-9 h-9
-                    '
-                    key={index}
-                >
-                    <img src={icon} alt={icon} key={icon}
-                        className="w-full h-full" 
-                    />
-                    {icon === DMIcon && dmNoti !== '' && (
-                        <div className='
-                            absolute top-0 right-0
-                            flex items-center justify-center
-                            sm:w-4 sm:h-4
-                            xl:w-5 xl:h-5
-                            bg-orange-500 text-white
-                            rounded-full text-xs
-                            transform translate-x-1 translate-y-5
-                        '>
-                            2
-                        </div>
-                    )}
-                </button>
-            ))}
-
+                {toprightIcons.map((icon, index) => (
+                    <button
+                        className='
+                            relative sm:flex md:hidden items-center justify-center
+                            rounded-full transition-all duration-300
+                            sm:ml-4 w-6 h-6
+                            lg:ml-6 w-8 h-8
+                            xl:w-9 h-9
+                        '
+                        key={index}
+                        onClick={icon === NotiIcon ? handleNotiClick : null}
+                    >
+                        <img src={icon} alt={icon} key={icon}
+                            className="w-full h-full" 
+                        />
+                        {icon === NotiIcon && unReadNoti > 0 && (
+                            <div className='
+                                absolute top-0 right-0
+                                flex items-center justify-center
+                                sm:w-4 sm:h-4
+                                xl:w-5 xl:h-5
+                                bg-orange-500 text-white
+                                rounded-full text-xs
+                                transform translate-x-1 translate-y-5'
+                            >
+                                {unReadNoti}
+                            </div>
+                        )}
+                    </button>
+                ))}
             </div>
+            {isNotiVisible &&
+                <Noti noti={noti} setIsNotiVisible={setIsNotiVisible} setUnReadNoti={setUnReadNoti} />
+            }
         </div>
     )
 }

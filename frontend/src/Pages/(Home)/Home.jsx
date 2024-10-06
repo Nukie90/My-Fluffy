@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, setError } from 'react';
 import './../../App';
 import Posts from '../../Components/Posts';
 import axios from 'axios';
@@ -10,11 +10,11 @@ function Home({ currentPage, setCurrentPage }) {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentFetchPage, setCurrentFetchPage] = useState(1); // Renamed variable
-  const [hasMore, setHasMore] = useState(true); // Track if there are more posts to fetch
+  const [currentFetchPage, setCurrentFetchPage] = useState(1); 
+  const [hasMore, setHasMore] = useState(true); 
 
   const fetchPosts = async (page) => {
-    if (!hasMore) return; // Prevent fetching if no more posts
+    if (!hasMore) return;
 
     setLoading(true);
     try {

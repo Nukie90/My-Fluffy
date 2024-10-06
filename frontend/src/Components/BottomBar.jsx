@@ -20,7 +20,7 @@ function BottomBar({currentPage, setCurrentPage}) {
     ];
 
     const handlePageClick = (page) => {
-        if (currentPage === 'Home') {
+        if (currentPage === 'Home' && page === 'Home') {
             setIsAddPostVisible(true);
         } else {
             setIsAddPostVisible(false);
@@ -31,7 +31,7 @@ function BottomBar({currentPage, setCurrentPage}) {
     return (
         <div 
             className='
-                z-100
+                z-10
                 fixed bottom-10 left-0
                 w-full h-auto
                 flex items-center justify-center'

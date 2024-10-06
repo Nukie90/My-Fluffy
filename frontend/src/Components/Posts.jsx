@@ -60,17 +60,10 @@ export default function Posts({ data }) {
                 <h1>{post.reward || 'N/A'}</h1> {/* Adjust accordingly if Reward is part of the new structure */}
               </div>
               <div className='w-1/2 flex items-center justify-end'>
-                {post.status === 'Lost' ? ( // Adjusted to use the status field
-                  <button className='flex w-auto h-8 py-1 px-2 bgct-orange rounded-lg'>
-                    <h2 className='text-md text-white font-medium mx-2'>Found</h2>
-                    <img src={FoundIcon} alt='found_icon' className='w-6 h-6' />
-                  </button>
-                ) : (
-                  <button className='flex w-auto h-8 py-1 px-2 bgct-orange rounded-lg'>
-                    <h2 className='text-md text-white font-medium mx-2'>My Pet!</h2>
-                    <img src={FoundIcon} alt='found_icon' className='w-6 h-6' />
-                  </button>
-                )}
+                <button className='flex w-auto h-8 py-1 px-2 bgct-orange rounded-lg'>
+                  <h2 className='text-md text-white font-medium mx-2'>Found</h2>
+                  <img src={FoundIcon} alt='found_icon' className='w-6 h-6' />
+                </button>
               </div>
             </div>
           </div>
