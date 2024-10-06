@@ -6,40 +6,43 @@ import DMIcon from './Icons/dm_icon.svg';
 // import DefaultPFP from './Profiles/default_pfp.jpg';
 
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 function TopBar({CurrentPage, setCurrentPage}) {
     const [isNotiVisible, setIsNotiVisible] = useState(false);
     const [unReadNoti, setUnReadNoti] = useState(0);
+    const [noti, setNoti] = useState([]);
 
     let pfp = "/Profiles/default_pfp.jpg";
     const toprightIcons = [NotiIcon];
 
-    let noti = [
-        {
-            id: 1,
-            UserPicture: '/Profiles/default_pfp.jpg',
-            username: 'User1',
-            noti: 'Your pet has been found!',
-            isRead: false
-        },
-        {
-            id: 2,
-            UserPicture: '/Profiles/default_pfp.jpg',
-            username: 'User2',
-            noti: 'Your pet has been found!',
-            isRead: false
-        }
-    ];
+    useEffect(() => {
+        // Fetch notifications from the API
+        const fetchNotifications = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/notifications', {
+                    withCredentials: true, // Ensure credentials are included in the request
+                });
+                const notifications = response.data;
+
+                // Update state with the fetched notifications
+                setNoti(notifications);
+                
+                // Count unread notifications
+                setUnReadNoti(notifications.filter(noti => !noti.isRead).length);
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        };
+
+        fetchNotifications();
+    }, []);
 
     function handleNotiClick() {
         setIsNotiVisible(!isNotiVisible);
         console.log(isNotiVisible);
     }
-
-    useEffect(() => {
-        setUnReadNoti(noti.filter(noti => !noti.isRead).length);
-    }, [noti, setUnReadNoti]);
 
     return (
         <div className="fixed h-20 w-full flex text-center bg-white shadow-md items-center justify-between sm:pt-6 md:pt-0 sm:px-4 md:px-6 lg:px-8"
