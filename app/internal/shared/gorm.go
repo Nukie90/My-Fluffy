@@ -51,4 +51,5 @@ func (gc *GormConfig) AutoMirage(db *gorm.DB) {
 	db.AutoMigrate(&entity.User{})
 	db.AutoMigrate(&entity.Notification{})
 	db.AutoMigrate(&entity.Post{})
+	db.AutoMigrate(&entity.SavedPost{})
 }

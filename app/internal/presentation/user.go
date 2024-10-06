@@ -3,6 +3,7 @@ package presentation
 import (
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 
 	"github.com/Nukie90/my-fluffy/app/internal/business"
 )
@@ -89,4 +90,64 @@ func (uh *UserHandler) GetAllUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.JSON(users)
+}
+
+// GetNotifications godoc
+//
+//	@Summary		Get all notifications
+//	@Description	Get all notifications for current user
+//	@Tags			notifications
+//	@Produce		json
+//	@Success		200	{object}	[]model.Notification	"List of notifications"
+//	@Router			/notifications [get]
+func (uh *UserHandler) GetNotifications(c *fiber.Ctx) error {
+	userID := c.Cookies("session")
+	notifications, err := uh.UserUsecase.GetNotifications(userID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(notifications)
+}
+
+// DeleteNotification godoc
+//
+//	@Summary		Delete a notification
+//	@Description	Delete a notification
+//	@Tags			notifications
+//	@Param			id	path	string	true	"Notification ID"
+//	@Produce		json
+//	@Success		200	{string}	string	"Notification deleted"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/notifications/{id} [delete]
+func (uh *UserHandler) DeleteNotification(c *fiber.Ctx) error {
+	notificationID := c.Params("id")
+	notificationIDUint, err := strconv.ParseUint(notificationID, 10, 64)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	err = uh.UserUsecase.DeleteNotification(uint(notificationIDUint))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(fiber.Map{"message": "Notification deleted"})
+}
+
+// GetUserByID godoc
+//
+//	@Summary		Get user by ID
+//	@Description	Get user by ID
+//	@Tags			users
+//	@Param			id	path	string	true	"User ID"
+//	@Produce		json
+//	@Success		200	{object}	model.User	"User details"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/users/{id} [get]
+func (uh *UserHandler) GetUserByID(c *fiber.Ctx) error {
+	userID := c.Params("id")
+	user, err := uh.UserUsecase.GetUserByID(userID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(user)
 }

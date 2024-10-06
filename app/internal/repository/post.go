@@ -34,14 +34,31 @@ func (pr *PostRepo) GetPostFromSpecificUser(userID ulid.ULID) ([]entity.Post, er
 }
 
 func (pr *PostRepo) FoundPet(postID uint, foundID ulid.ULID) error {
-	// Find the post update the foundID and status to found
-	result := pr.DB.Model(&entity.Post{}).Where("id = ?", postID).Updates(map[string]interface{}{
-		"found_id": foundID,
-		"status":   "Found",
-	})
+	// Find the post update the foundID and status to found, but only if the post is not already found
+	result := pr.DB.Model(&entity.Post{}).Where("id = ? AND status = ?", postID, "Missing").Updates(map[string]interface{}{"found_id": foundID, "status": "Found"})
 	if result.Error != nil {
 		return result.Error
 	}
 
 	return nil
+}
+
+func (pr *PostRepo) GetPostByID(postID uint) (*entity.Post, error) {
+	var post entity.Post
+	result := pr.DB.Where("id = ?", postID).First(&post)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &post, nil
+}
+
+func (pr *PostRepo) GetPaginatedPosts(limit int, offset int) ([]entity.Post, error) {
+    var posts []entity.Post
+    result := pr.DB.Order("created_at desc").Limit(limit).Offset(offset).Find(&posts)
+    if result.Error != nil {
+        return nil, result.Error
+    }
+
+    return posts, nil
 }

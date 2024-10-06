@@ -5,15 +5,22 @@ import (
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
+	"github.com/Nukie90/my-fluffy/app/internal/shared"
 	"github.com/oklog/ulid/v2"
 )
 
 type PostUsecase struct {
-	PostRepo *repository.PostRepo
+	PostRepo       *repository.PostRepo
+	AdminNotifier  *shared.UserNotifier
+	ClientNotifier *shared.UserNotifier
 }
 
-func NewPostUsecase(pr *repository.PostRepo) *PostUsecase {
-	return &PostUsecase{PostRepo: pr}
+func NewPostUsecase(pr *repository.PostRepo, an *shared.UserNotifier, cn *shared.UserNotifier) *PostUsecase {
+	return &PostUsecase{
+		PostRepo:       pr,
+		AdminNotifier:  an,
+		ClientNotifier: cn,
+	}
 }
 
 func (pu *PostUsecase) Create(post *model.CreatePost) error {
@@ -65,14 +72,49 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 	fmt.Println(foundPost.FoundID)
 	foundidUlid, err := ulid.Parse(foundPost.FoundID)
 	if err != nil {
-		fmt.Println("unmarshling error")
+		fmt.Println("unmarshalling error")
 		return err
 	}
 
 	err = pu.PostRepo.FoundPet(foundPost.ID, foundidUlid)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
+	//get the post
+	foundPostEntity, err := pu.PostRepo.GetPostByID(foundPost.ID)
+	if err != nil {
+		return err
+	}
+
+	//notify the owner
+	pu.ClientNotifier.NotifyObserver(foundPostEntity.OwnerID.String(), foundPost.FoundID, "foundPet")
+
 	return nil
+}
+
+func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.Post, error) {
+	const postsPerPage = 10
+	offset := (page - 1) * postsPerPage
+
+	posts, err := pu.PostRepo.GetPaginatedPosts(postsPerPage, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	var postsModel []model.Post
+	for _, post := range posts {
+		postsModel = append(postsModel, model.Post{
+			ID:      post.ID,
+			Title:   post.Title,
+			Content: post.Content,
+			Picture: post.Picture,
+			Reward:  post.Reward,
+			OwnerID: post.OwnerID.String(),
+			FoundID: post.FoundID.String(),
+		})
+	}
+
+	return postsModel, nil
 }

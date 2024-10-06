@@ -31,6 +31,7 @@ go.sum
 
 #tmp directory
 tmp/
+.toml
 
 # sqlite database
 *.db

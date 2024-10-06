@@ -1,5 +1,6 @@
 basePath: /api/v1
 definitions:
+
   model.CreatePayment:
     properties:
       amount:
@@ -7,6 +8,11 @@ definitions:
       transaction:
         type: string
       user_id:
+
+  model.ErrorResponse:
+    properties:
+      error:
+
         type: string
     type: object
   model.FoundPost:
@@ -25,6 +31,7 @@ definitions:
         example: john_doe
         type: string
     type: object
+
   model.Payment:
     properties:
       amount:
@@ -33,6 +40,44 @@ definitions:
         type: string
       transaction:
         type: string
+
+  model.Notification:
+    properties:
+      create_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      owner_id:
+        type: string
+    type: object
+  model.Post:
+    properties:
+      content:
+        type: string
+      found_id:
+        type: string
+      id:
+        type: integer
+      owner_id:
+        type: string
+      picture:
+        items:
+          type: integer
+        type: array
+      reward:
+        type: number
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  model.SavedPost:
+    properties:
+      post_id:
+        type: integer
+
       user_id:
         type: string
     type: object
@@ -42,10 +87,15 @@ definitions:
         example: password
         type: string
       role:
-        example: admin
+        example: ""
         type: string
       username:
         example: john_doe
+        type: string
+    type: object
+  model.SuccessResponse:
+    properties:
+      message:
         type: string
     type: object
   model.User:
@@ -73,6 +123,7 @@ info:
   title: SDA My Fluffy API
   version: "1.0"
 paths:
+
   /payments:
     post:
       consumes:
@@ -85,10 +136,16 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/model.CreatePayment'
+
+  /notifications:
+    get:
+      description: Get all notifications for current user
+
       produces:
       - application/json
       responses:
         "200":
+
           description: Payment created successfully
           schema:
             type: string
@@ -108,24 +165,53 @@ paths:
       - description: User ID
         in: path
         name: userID
+
+          description: List of notifications
+          schema:
+            items:
+              $ref: '#/definitions/model.Notification'
+            type: array
+      summary: Get all notifications
+      tags:
+      - notifications
+  /notifications/{id}:
+    delete:
+      description: Delete a notification
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+
         required: true
         type: string
       produces:
       - application/json
       responses:
         "200":
+
           description: Payments from specific user
           schema:
             items:
               $ref: '#/definitions/model.Payment'
             type: array
+
+          description: Notification deleted
+          schema:
+            type: string
+
         "400":
           description: Bad request
           schema:
             type: string
+
       summary: Get payments from specific user
       tags:
       - payments
+
+      summary: Delete a notification
+      tags:
+      - notifications
+
   /posts:
     post:
       consumes:
@@ -164,6 +250,33 @@ paths:
           schema:
             type: string
       summary: Create a new post
+      tags:
+      - posts
+  /posts/feed:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated posts for the feed, 10 at a time
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated posts
+          schema:
+            items:
+              $ref: '#/definitions/model.Post'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get paginated posts
       tags:
       - posts
   /posts/found:
@@ -211,6 +324,57 @@ paths:
       summary: Get posts from specific user
       tags:
       - posts
+  /saved_posts:
+    get:
+      consumes:
+      - application/json
+      description: Get all saved posts by user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved posts with details
+          schema:
+            items:
+              $ref: '#/definitions/model.Post'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get all saved posts by user
+      tags:
+      - saved_posts
+  /savedPost/saved_posts:
+    post:
+      consumes:
+      - application/json
+      description: Create a new saved post
+      parameters:
+      - description: Saved post information
+        in: body
+        name: saved_post
+        required: true
+        schema:
+          $ref: '#/definitions/model.SavedPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved post created successfully
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create a new saved post
+      tags:
+      - saved_posts
   /users:
     post:
       consumes:
@@ -235,6 +399,29 @@ paths:
           schema:
             type: string
       summary: Create a new user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get user by ID
       tags:
       - users
   /users/all:

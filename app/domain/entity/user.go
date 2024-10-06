@@ -32,6 +32,10 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	ulid := ulid.MustNew(ulid.Now(), entropy)
 	u.ID = ulid
 
+	if u.Role != "admin" {
+		u.Role = "client"
+	}
+
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
 	return

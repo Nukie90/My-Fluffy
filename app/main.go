@@ -61,24 +61,29 @@ func (a *App) Start(name, value, usage string) {
 	//Initialize the repository, notifier and service
 	userRepo := repository.UserRepo{DB: db}
 	postRepo := repository.PostRepo{DB: db}
-	paymentRepo := repository.PaymentRepo{DB: db}
-	notifier := shared.UserCreationNotifier{}
-	adminNotifier := business.NewAdminNotifier(&userRepo)
-	notifier.Register(adminNotifier)
+	savedPostRepo := repository.SavedPostRepo{DB: db}
+	ANotifier := shared.UserNotifier{}
+	CNotifier := shared.UserNotifier{}
+	notificationFactory := &shared.DefaultNotificationFactory{}
+	adminNotifier := business.NewAdminNotifier(&userRepo, notificationFactory)
+	clientNotifier := business.NewClientNotifier(&userRepo, notificationFactory)
+	ANotifier.Register(adminNotifier)
+	CNotifier.Register(clientNotifier)
 
-	userUsecase := business.NewUserUsecase(&userRepo, &notifier)
+	userUsecase := business.NewUserUsecase(&userRepo, &ANotifier, &CNotifier)
 	userHandler := presentation.UserHandler{UserUsecase: userUsecase}
 
-	postUsecase := business.NewPostUsecase(&postRepo)
+	postUsecase := business.NewPostUsecase(&postRepo, &ANotifier, &CNotifier)
 	postHandler := presentation.PostHandler{PostUsecase: postUsecase}
 
-	paymentGateway := business.PayPalAdapter{}
-	paymentUsecase := business.NewPaymentUsecase(&paymentRepo, &paymentGateway)
-	paymentHandler := presentation.PaymentHandler{PaymentUsecase:paymentUsecase}
+	savedPostUsecase := business.NewSavedPostUsecase(&savedPostRepo)
+	savedPostHandler := presentation.SavedPostHandler{SavedPostUsecase: savedPostUsecase}
 
-	router := api.NewRouter(&userHandler, &postHandler, &paymentHandler)
+	realRouter := api.NewRouter(&userHandler, &postHandler, &savedPostHandler)
+	routerProxy := api.NewRouterProxy(realRouter)
 
-	router.SetupRoutes(a.App)
+
+	routerProxy.SetupRoutes(a.App)
 
 	a.Get("/swagger/*", fiberSwagger.WrapHandler)
 
