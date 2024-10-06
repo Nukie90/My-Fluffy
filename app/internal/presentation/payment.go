@@ -14,8 +14,18 @@ func NewPaymentHandler(pu *business.PaymentUsecase) *PaymentHandler {
 	return &PaymentHandler{PaymentUsecase: pu}
 }
 
+// CreateUserPayment godoc
+//	@Summary		Create a new payment
+//	@Description	Create a new payment
+//	@Tags			payments
+//	@Accept			json
+//	@Param			payment	body	model.CreatePayment	true	"Payment information"
+//	@Produce		json
+//	@Success		200	{string}	string	"Payment created successfully"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/payments [post]
 func (ph *PaymentHandler) CreateUserPayment(c *fiber.Ctx) error {
-	var payment model.CreatePayment
+	payment := model.CreatePayment{}
 	if err := c.BodyParser(&payment); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -28,6 +38,16 @@ func (ph *PaymentHandler) CreateUserPayment(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Payment created successfully"})
 }
 
+// GetPaymentsFromSpecificUser godoc
+//	@Summary		Get payments from specific user
+//	@Description	Get payments from specific user
+//	@Tags			payments
+//	@Accept			json
+//	@Param			userID	path	string	true	"User ID"
+//	@Produce		json
+//	@Success		200	{array}		entity.Payment
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/payments/user/{userID} [get]
 func (ph *PaymentHandler) GetPaymentsFromSpecificUser(c *fiber.Ctx) error {
 	userID := c.Params("userID")
 	if userID == "" {
