@@ -2,8 +2,8 @@ package presentation
 
 import (
 	"github.com/Nukie90/my-fluffy/app/domain/model"
-	"github.com/gofiber/fiber/v2"
 	"github.com/Nukie90/my-fluffy/app/internal/business"
+	"github.com/gofiber/fiber/v2"
 )
 
 type PaymentHandler struct {
@@ -15,6 +15,7 @@ func NewPaymentHandler(pu *business.PaymentUsecase) *PaymentHandler {
 }
 
 // CreateUserPayment godoc
+//
 //	@Summary		Create a new payment
 //	@Description	Create a new payment
 //	@Tags			payments
@@ -39,13 +40,14 @@ func (ph *PaymentHandler) CreateUserPayment(c *fiber.Ctx) error {
 }
 
 // GetPaymentsFromSpecificUser godoc
+//
 //	@Summary		Get payments from specific user
 //	@Description	Get payments from specific user
 //	@Tags			payments
 //	@Accept			json
 //	@Param			userID	path	string	true	"User ID"
 //	@Produce		json
-//	@Success		200	{array}		entity.Payment
+//	@Success		200	{array}		model.Payment	"Payments from specific user"
 //	@Failure		400	{string}	string	"Bad request"
 //	@Router			/payments/user/{userID} [get]
 func (ph *PaymentHandler) GetPaymentsFromSpecificUser(c *fiber.Ctx) error {
@@ -61,4 +63,3 @@ func (ph *PaymentHandler) GetPaymentsFromSpecificUser(c *fiber.Ctx) error {
 
 	return c.JSON(payments)
 }
-

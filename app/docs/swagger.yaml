@@ -1,5 +1,14 @@
 basePath: /api/v1
 definitions:
+  model.CreatePayment:
+    properties:
+      amount:
+        type: number
+      transaction:
+        type: string
+      user_id:
+        type: string
+    type: object
   model.FoundPost:
     properties:
       found_id:
@@ -14,6 +23,17 @@ definitions:
         type: string
       username:
         example: john_doe
+        type: string
+    type: object
+  model.Payment:
+    properties:
+      amount:
+        type: number
+      id:
+        type: string
+      transaction:
+        type: string
+      user_id:
         type: string
     type: object
   model.Signup:
@@ -53,6 +73,59 @@ info:
   title: SDA My Fluffy API
   version: "1.0"
 paths:
+  /payments:
+    post:
+      consumes:
+      - application/json
+      description: Create a new payment
+      parameters:
+      - description: Payment information
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatePayment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payment created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Create a new payment
+      tags:
+      - payments
+  /payments/user/{userID}:
+    get:
+      consumes:
+      - application/json
+      description: Get payments from specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payments from specific user
+          schema:
+            items:
+              $ref: '#/definitions/model.Payment'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Get payments from specific user
+      tags:
+      - payments
   /posts:
     post:
       consumes:
