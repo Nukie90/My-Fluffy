@@ -41,3 +41,15 @@ func (pr *SavedPostRepo) GetAllSavedPostsByUser(userID ulid.ULID) ([]entity.Post
 
 	return posts, nil
 }
+
+// Unsave removes a saved post
+func (spr *SavedPostRepo) Unsave(userID ulid.ULID, postID uint) error {
+	result := spr.DB.Where("user_id = ? AND post_id = ?", userID, postID).Delete(&entity.SavedPost{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}

@@ -18,6 +18,22 @@ function Profile({ setCurrentPage }) {
     const [foundCount, setFoundCount] = useState(0);
     const [tab, setTab] = useState('finding');
 
+    const fetchUser = async () => {
+        try {
+            const cookies = document.cookie.split('; ');
+            const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
+            
+            const response = await axios.get(`http://localhost:3000/api/v1/users/${sessionCookie.split('=')[1]}`, {
+                withCredentials: true,
+            });
+
+            setUsername(response.data.username)
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        } 
+        
+    };
+
     const fetchPosts = async () => {
         setLoading(true);
         try {
@@ -39,8 +55,8 @@ function Profile({ setCurrentPage }) {
             setPosts(formattedPosts);
             // Updating counts
             setPetsCount(newPosts.length);
-            setLostCount(newPosts.filter(post => post.status === 'lost').length);
-            setFoundCount(newPosts.filter(post => post.status === 'found').length);
+            setLostCount(newPosts.filter(post => post.status === 'Missing' || post.status === 'Pending').length);
+            setFoundCount(newPosts.filter(post => post.status === 'Found').length);
         } catch (error) {
             console.error('Error fetching posts:', error);
         } finally {
@@ -55,7 +71,7 @@ function Profile({ setCurrentPage }) {
 
         if (sessionCookie) {
             setIsLogged(true);
-            setUsername('Jason'); // Placeholder username
+            fetchUser();
             fetchPosts();
         }
     }, [setCurrentPage]);
@@ -125,10 +141,10 @@ function Profile({ setCurrentPage }) {
                             <p>Loading posts...</p>
                         ) : (
                             posts
-                                .filter(post => (tab === 'finding' && post.status === 'lost') || (tab === 'found' && post.status === 'found'))
+                                .filter(post => (tab === 'finding' && post.status === 'Missing' || post.status === 'Pending') || (tab === 'found' && post.status === 'Found'))
                                 .map(post => (
                                     <div key={post.id} className='w-full h-auto rounded-lg overflow-hidden shadow-md'>
-                                        <img src={post.picture} alt={post.title} className='w-full h-40 object-cover' />
+                                        <img src={`data:image/jpeg;base64,${post.picture}`} alt={post.title} className='w-full h-40 object-cover' />
                                     </div>
                                 ))
                         )}

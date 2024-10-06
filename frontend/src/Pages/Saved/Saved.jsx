@@ -5,12 +5,12 @@ import axios from 'axios';
 
 import { useState, useEffect } from 'react'; 
 
-function Saved({currentPage, setCurrentPage}) {
+function Saved({setCurrentPage}) {
     const [isLogged, setIsLogged] = useState(false);
-    const [posts, setPosts] = useState([]);
+    const [savedPosts, setSavedPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchPosts = async () => {
+    const fetchSavedPosts = async () => {
 
         setLoading(true);
         try {
@@ -19,10 +19,10 @@ function Saved({currentPage, setCurrentPage}) {
                 withCredentials: true,
             }
           );
-          const newPosts = response.data; 
-          console.log('Fetched posts:', newPosts);
+          const savedPosts = response.data; 
+          console.log('Fetched savedPosts:', savedPosts);
     
-        const formattedPosts = newPosts.map(post => ({
+        const formattedPosts = savedPosts.map(post => ({
             id: post.id,
             title: post.title,
             content: post.content,
@@ -31,10 +31,10 @@ function Saved({currentPage, setCurrentPage}) {
             reward: post.reward
         }));
 
-        setPosts(prevPosts => [...prevPosts, ...formattedPosts]); // Append new posts
+        setSavedPosts(prevPosts => [...prevPosts, ...formattedPosts]);
           
         } catch (error) {
-          console.error('Error fetching posts:', error);
+          console.error('Error fetching savedPosts:', error);
         } finally {
           setLoading(false);
         }
@@ -47,7 +47,7 @@ function Saved({currentPage, setCurrentPage}) {
         
         if (sessionCookie) {
             setIsLogged(true);
-            fetchPosts();
+            fetchSavedPosts();
         }
     }, [setCurrentPage]);
     
@@ -63,7 +63,7 @@ function Saved({currentPage, setCurrentPage}) {
 
                             {loading && <p>Loading posts...</p>}
 
-                            <Posts data={posts} />
+                            <Posts data={savedPosts} savedPosts={savedPosts} />
                         </div>
                     </div>
                 </div>

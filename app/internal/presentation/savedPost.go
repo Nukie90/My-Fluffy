@@ -7,6 +7,7 @@ import (
 	"github.com/Nukie90/my-fluffy/app/internal/business"
 	"github.com/gofiber/fiber/v2"
 	"github.com/oklog/ulid/v2"
+	"gorm.io/gorm"
 )
 
 // SavedPostHandler is the handler for saved posts.
@@ -41,8 +42,8 @@ func (sh *SavedPostHandler) CreateSavedPost(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(model.ErrorResponse{Error: "invalid post_id format"})
 	}
 
-	// Convert UserID from string to ulid.ULID
-	userID, err := ulid.Parse(savedPost.UserID) // Assuming UserID in request is a string
+	cookie := c.Cookies("session")
+	userID, err := ulid.Parse(cookie)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(model.ErrorResponse{Error: "invalid user_id format"})
 	}
@@ -81,4 +82,42 @@ func (ph *SavedPostHandler) GetAllSavedPostsByUser(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(posts)
+}
+
+// UnsavePost handles the unsaving of a saved post.
+// @Summary      Unsave a post
+// @Description  Remove a saved post
+// @Tags         saved_posts
+// @Accept       json
+// @Param        body body model.UnsavePostRequest true "Unsave post request body"
+// @Produce      json
+// @Success      200  {object}  model.SuccessResponse "Saved post removed successfully"
+// @Failure      400  {object}  model.ErrorResponse "Bad request"
+// @Failure      404  {object}  model.ErrorResponse "Saved post not found"
+// @Failure      500  {object}  model.ErrorResponse "Internal server error"
+// @Router       /saved_posts [delete]
+func (sh *SavedPostHandler) UnsavePost(c *fiber.Ctx) error {
+	var request model.UnsavePostRequest
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(model.ErrorResponse{Error: err.Error()})
+	}
+
+	cookie := c.Cookies("session")
+	userID := cookie
+
+	// Validate postID
+	if request.PostID <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(model.ErrorResponse{Error: "invalid post_id format"})
+	}
+
+	// Call the use case to unsave the post
+	err := sh.SavedPostUsecase.Unsave(userID, request.PostID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(model.ErrorResponse{Error: "saved post not found"})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{Error: err.Error()})
+	}
+
+	return c.JSON(model.SuccessResponse{Message: "Saved post removed successfully"})
 }

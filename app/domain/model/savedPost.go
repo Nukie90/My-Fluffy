@@ -14,3 +14,7 @@ type SavedPost struct {
 	UserID string `json:"user_id"`
 	PostID uint   `json:"post_id"`
 }
+
+type UnsavePostRequest struct {
+	PostID uint `json:"post_id" validate:"required"`
+}

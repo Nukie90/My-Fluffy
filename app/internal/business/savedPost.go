@@ -45,6 +45,7 @@ func (pu *SavedPostUsecase) GetAllSavedPostsByUser(userID string) ([]model.Post,
 			ID:      post.ID,
 			Title:   post.Title,
 			Content: post.Content,
+			Status:  post.Status,
 			Picture: post.Picture,
 			Reward:  post.Reward,
 			OwnerID: post.OwnerID.String(),
@@ -53,4 +54,20 @@ func (pu *SavedPostUsecase) GetAllSavedPostsByUser(userID string) ([]model.Post,
 	}
 
 	return postsModel, nil
+}
+
+// Unsave removes a saved post
+func (spu *SavedPostUsecase) Unsave(userID string, postID uint) error {
+	useridUlid, err := ulid.Parse(userID)
+	if err != nil {
+		return err
+	}
+
+	// Call the repository to unsave the post
+	err = spu.SavedPostRepo.Unsave(useridUlid, postID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

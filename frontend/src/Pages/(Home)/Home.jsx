@@ -9,6 +9,7 @@ function Home({ currentPage, setCurrentPage }) {
   }, [setCurrentPage]);
 
   const [posts, setPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentFetchPage, setCurrentFetchPage] = useState(1); 
   const [hasMore, setHasMore] = useState(true); 
@@ -45,13 +46,44 @@ function Home({ currentPage, setCurrentPage }) {
     }
   };
 
+  const fetchSavedPosts = async () => {
+
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:3000/api/v1/saved_posts/`,
+        {
+            withCredentials: true,
+        }
+      );
+      const savedPosts = response.data; 
+      console.log('Fetched savedPosts:', savedPosts);
+
+    const formattedPosts = savedPosts.map(post => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        status: post.status,
+        picture: post.picture,
+        reward: post.reward
+    }));
+
+    setSavedPosts(prevPosts => [...prevPosts, ...formattedPosts]);
+      
+    } catch (error) {
+      console.error('Error fetching savedPosts:', error);
+    } finally {
+      setLoading(false);
+    }
+};
+
   useEffect(() => {
-    fetchPosts(currentFetchPage); // Fetch posts on initial load
-  }, []); // Empty dependency array means this effect runs only once on mount
+    fetchPosts(currentFetchPage);
+    fetchSavedPosts();
+  }, []); 
 
   const handleScroll = () => {
     if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.offsetHeight) {
-      fetchPosts(currentFetchPage); // Fetch next page when scrolled to the bottom
+      fetchPosts(currentFetchPage);
     }
   };
 
@@ -71,7 +103,7 @@ function Home({ currentPage, setCurrentPage }) {
 
         {loading && <p>Loading posts...</p>}
 
-        <Posts data={posts} />
+        <Posts data={posts} savedPosts={savedPosts} />
       </div>
     </div>
   );

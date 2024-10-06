@@ -58,6 +58,7 @@ func (pu *PostUsecase) GetPostsFromSpecificUser(userID string) ([]model.Post, er
 			ID:      post.ID,
 			Title:   post.Title,
 			Content: post.Content,
+			Status:  post.Status,
 			Picture: post.Picture,
 			Reward:  post.Reward,
 			OwnerID: post.OwnerID.String(),

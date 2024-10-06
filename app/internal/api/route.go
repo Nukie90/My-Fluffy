@@ -42,6 +42,7 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 			{
 				savedPosts.Post("/", r.savedPostHandler.CreateSavedPost)
 				savedPosts.Get("/", r.savedPostHandler.GetAllSavedPostsByUser)
+				savedPosts.Delete("/", r.savedPostHandler.UnsavePost)
 			}
 			noti := v1.Group("/notifications")
 			{
