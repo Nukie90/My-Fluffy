@@ -28,8 +28,8 @@ func (spr *SavedPostRepo) Create(savedPost *entity.SavedPost) error {
 
 func (pr *SavedPostRepo) GetAllSavedPostsByUser(userID ulid.ULID) ([]entity.Post, error) {
 	var posts []entity.Post
-	// Unscoped() ensures GORM doesn't check for deleted_at in saved_posts
-	result := pr.DB.Unscoped().Table("saved_posts").
+	// Ensure only posts saved by the specific userID are retrieved
+	result := pr.DB.Table("saved_posts").
 		Select("posts.*").
 		Joins("join posts on saved_posts.post_id = posts.id").
 		Where("saved_posts.user_id = ?", userID).

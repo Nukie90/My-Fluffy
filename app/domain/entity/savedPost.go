@@ -10,11 +10,12 @@ import (
 
 // SavedPost is the entity model for saved posts
 type SavedPost struct {
-	ID        ulid.ULID `json:"id" gorm:"primaryKey"`
-	UserID    ulid.ULID `json:"user_id"`
-	PostID    uint      `json:"post_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        ulid.ULID      `json:"id" gorm:"primaryKey"`
+	UserID    ulid.ULID      `json:"user_id"`
+	PostID    uint           `json:"post_id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }
 
 // TableName returns the table name for the saved post model

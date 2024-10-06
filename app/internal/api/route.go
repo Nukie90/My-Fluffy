@@ -41,7 +41,7 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 			savedPosts := v1.Group("/saved_posts")
 			{
 				savedPosts.Post("/", r.savedPostHandler.CreateSavedPost)
-				savedPosts.Get("/:user_id", r.savedPostHandler.GetAllSavedPostsByUser)
+				savedPosts.Get("/", r.savedPostHandler.GetAllSavedPostsByUser)
 			}
 			noti := v1.Group("/notifications")
 			{
