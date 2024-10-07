@@ -153,3 +153,29 @@ func (ph *PostHandler) GetPaginatedPosts(c *fiber.Ctx) error {
 
 	return c.JSON(posts)
 }
+
+// Confirmation godoc
+//
+//	@Summary		Confirmation
+//	@Description	Confirmation
+//	@Tags			posts
+//	@Accept			json
+//	@Param			id	body	model.ConfirmationPost	true	"Post ID"
+//	@Produce		json
+//	@Success		200	{string}	string	"Confirmation sent"
+//	@Failure		400	{string}	string	"Bad request"
+//	@Router			/posts/confirmation/ [put]
+func (ph *PostHandler) Confirmation(c *fiber.Ctx) error {
+	var confirmation model.ConfirmationPost
+	fmt.Println(confirmation.ID)
+	if err := c.BodyParser(&confirmation); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error1": err.Error()})
+	}
+
+	err := ph.PostUsecase.Confirmation(confirmation.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error2": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"message": "Confirmation sent"})
+}

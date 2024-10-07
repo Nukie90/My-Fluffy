@@ -23,3 +23,7 @@ type FoundPost struct {
 	ID      uint   `json:"id"`
 	FoundID string `json:"found_id"`
 }
+
+type ConfirmationPost struct {
+	ID uint `json:"id"`
+}
