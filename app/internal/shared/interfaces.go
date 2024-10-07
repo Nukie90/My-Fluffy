@@ -19,3 +19,10 @@ type NotificationFactory interface {
 type PaymentGateway interface {
     ProcessPayment(payment *model.CreatePayment) error
 }
+
+type PaymentService interface {
+
+    ProcessPaymentService(payment *model.PayPalPayment) error
+
+}
+
