@@ -22,11 +22,18 @@ export default function Posts({ data, savedPosts }) {
       initialPostStatuses[post.id] = post.status; 
     });
     setPostStatuses(initialPostStatuses);
-
+  
+    // Safely read the session cookie
     const cookies = document.cookie.split('; ');
-    setSessionCookie(cookies.find(cookie => cookie.startsWith('session=')).split('=')[1]);
-    
+    const sessionCookieValue = cookies.find(cookie => cookie.startsWith('session='));
+    if (sessionCookieValue) {
+      setSessionCookie(sessionCookieValue.split('=')[1]);
+    } else {
+      setSessionCookie(''); // or handle it however you'd like, e.g., set to null
+    }
+  
   }, [savedPosts, data]); 
+  
 
   const handleSave = async (id) => {
     const isSaved = localSavedPosts[id];
