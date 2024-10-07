@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import './../../App.css';
 import { useState, useEffect } from 'react';
-import Posts from '../../Components/Posts';
 import axios from 'axios';
 import ProfileClick from './../../Components/Icons/profile_afterclick.svg';
 import ProfileUnClick from './../../Components/Icons/profile_beforeclick.svg';
 import SmallProfile from './../../Components/Icons/small_profile.svg';
 
 import TopBar from './../../Components/TopBar';
+import ShowPost from './../../Components/ShowPost'; // Importing the modal for showing posts
 
 function Profile({ setCurrentPage }) {
     const [isLogged, setIsLogged] = useState(false);
@@ -18,6 +18,8 @@ function Profile({ setCurrentPage }) {
     const [lostCount, setLostCount] = useState(0);
     const [foundCount, setFoundCount] = useState(0);
     const [tab, setTab] = useState('finding');
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
 
     const fetchUser = async () => {
         try {
@@ -81,12 +83,16 @@ function Profile({ setCurrentPage }) {
         }
     }, [setCurrentPage]);
 
+    const handlePostClick = (post) => {
+        setSelectedPost(post);
+        setIsModalVisible(true);
+    };
+
     return (
         <div className='relative h-screen w-full bg-[#F9F9F9] flex flex-col'>
-            {/* TopBar integration */}
             <TopBar CurrentPage="Profile" setCurrentPage={setCurrentPage} />
 
-            <div className='flex flex-col px-8 py-4 mt-20'> {/* Adjusted margin for TopBar */}
+            <div className='flex flex-col px-8 py-4 mt-20'>
                 {isLogged ? (
                     <div className='flex flex-col items-start w-full mb-auto'>
                         <h1 className='text-3xl font-bold text-[#43337B] mb-4 mt-2'>Welcome, {username}!</h1>
@@ -148,7 +154,7 @@ function Profile({ setCurrentPage }) {
                                 posts
                                     .filter(post => (tab === 'finding' && (post.status === 'Missing' || post.status === 'Pending')) || (tab === 'found' && post.status === 'Found'))
                                     .map(post => (
-                                        <div key={post.id} className='w-full h-auto rounded-lg overflow-hidden shadow-md'>
+                                        <div key={post.id} className='w-full h-auto rounded-lg overflow-hidden shadow-md cursor-pointer' onClick={() => handlePostClick(post)}>
                                             <img src={`data:image/jpeg;base64,${post.picture}`} alt={post.title} className='w-full h-40 object-cover' />
                                         </div>
                                     ))
@@ -169,6 +175,10 @@ function Profile({ setCurrentPage }) {
                     </div>
                 )}
             </div>
+
+            {isModalVisible && selectedPost && (
+                <ShowPost post={selectedPost} setIsModalVisible={setIsModalVisible} />
+            )}
         </div>
     );
 }
