@@ -102,17 +102,11 @@ function Home({ currentPage, setCurrentPage }) {
   }, [currentFetchPage]); // Re-run when currentFetchPage changes
 
   return (
-    <div className="flex sm:flex-col md:flex-row h-auto sm:w-full pt-20 sm:px-4 md:px-6 md:mx-auto lg:px-8">
-      <div className='sm:hidden md:block h-auto pt-4 sm:w-full md:w-1/3'>
-        <div className='h-screen w-full flex'>
-          <img src={MyFluffy} alt='My Fluffy Logo' className='w-8 h-8 mr-4' />
-          <h1 className='sm:text-xl md:text-2xl font-bold'>My Fluffy</h1>
-        </div>
-      </div>
-      <div className="h-auto sm:w-full md:w-1/3 pt-4 pb-20 flex flex-col">
-        <div className="h-auto md:ml-16 md:pl-3 text-left">
-          {/* <h1 className="sm:text-xl md:text-2xl font-bold">Posts</h1> */}
-          <BottomBar currentPage={currentPage} />
+    <div className="flex sm:flex-col lg:flex-row h-auto sm:w-full pt-20 sm:px-4 lg:px-6 lg:mx-auto lg:px-8">
+      <div className='sm:hidden md:block h-auto pt-4 sm:w-full lg:w-1/3'></div>
+      <div className="h-auto sm:w-full lg:w-1/3 pt-4 pb-20 flex flex-col">
+        <div className="h-auto md:ml-20 lg:ml-16 md:pl-3 text-left">
+          <h1 className="sm:text-xl md:text-2xl font-bold">Posts</h1>
         </div>
 
         <div className="flex flex-col items-center">

@@ -66,7 +66,7 @@ function TopBar({ CurrentPage, setCurrentPage }) {
                     {toprightIcons.map((icon, index) => (
                         <button
                             className='
-                                relative sm:flex md:hidden items-center justify-center
+                                relative sm:flex items-center justify-center
                                 rounded-full transition-all duration-300
                                 sm:ml-4 w-6 h-6
                                 lg:ml-6 w-8 h-8

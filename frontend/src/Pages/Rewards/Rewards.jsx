@@ -86,28 +86,21 @@ export default function RewardPage() {
             <div className="w-full grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {rewards.map((reward) => (
                     <div key={reward.id} className="bg-[#C4C3E3] rounded-lg p-4 flex flex-col space-y-4">
-                        <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-purple-500 rounded-full">
+
+                        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center items-center">
+                            <div className="w-12 h-12 bg-purple-500 rounded-full mr-4">
                                 <img
                                     src={`/Profiles/default_pfp.jpg`}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-full"
                                 />
                             </div>
-                            <h3 className="text-md font-bold text-gray-900">{reward.id || 'Loading...'}</h3> {/* Display username */}
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                            <div className="w-28 h-28 rounded-lg bg-green-200">
-                                <img
-                                    src={reward.image || RewardPic}
-                                    alt="Pet"
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
 
                             <div className="flex-1">
-                                <p className="text-lg font-semibold text-gray-900">{usernames[reward.owner_id]} gave you a reward!</p>
+                                <div className='flex'>
+                                    <p className="text-lg font-semibold text-gray-900 mr-2">{usernames[reward.owner_id]}</p>
+                                    <p className="text-lg text-gray-900"> gave you a reward!</p>
+                                </div>
                                 <p className="text-sm text-gray-500 mt-1">{convertDate(reward.created_at)}</p>
                             </div>
                         </div>

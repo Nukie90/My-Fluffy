@@ -55,14 +55,14 @@ function Saved({setCurrentPage}) {
     }, [setCurrentPage]);
     
     return (
-        <div className='min-h-screen h-auto w-full bg-red-200 flex flex-col justify-center items-center'>
+        <div className='min-h-screen h-auto w-full flex flex-col justify-center items-center'>
             {isLogged ? (
                 <div>
                     <div className="flex sm:flex-col md:flex-row h-auto w-full pt-20 sm:px-4 md:px-6 lg:px-8">
                         <div className='h-auto pt-4 pb-20'>
-                            {/* <div className='h-auto'>
+                            <div className='h-auto'>
                             <h1 className='sm:text-xl md:text-2xl font-bold'>Saved Posts</h1>
-                            </div> */}
+                            </div>
 
                             {loading && <p>Loading posts...</p>}
 
