@@ -29,7 +29,9 @@ function App() {
             <Route path="/signup" element={<Signup currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
         </Routes>
         {currentPage !== 'Login' && currentPage !== 'Signup' && (
-          <BottomBar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <div className='md:hidden'>
+            <BottomBar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          </div>
         )}
       </Router>
     </div>

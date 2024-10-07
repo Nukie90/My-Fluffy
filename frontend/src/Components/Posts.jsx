@@ -109,13 +109,13 @@ export default function Posts({ data, savedPosts }) {
   };  
   
   return (
-    <div className='h-auto pb-4 flex flex-col justify-center items-center'>
+    <div className='md:w-3/4 h-auto pb-4 flex flex-col justify-center items-center'>
       {data.map((post) => {
         const isSaved = localSavedPosts[post.id]; // Check saved status in local state
         const postStatus = postStatuses[post.id]; // Get the current status from local state
 
         return (
-          <div key={post.id} className='h-auto w-full bg-white p-4 my-2 rounded-lg shadow-md'>
+          <div key={post.id} className='h-auto sm:w-full bg-white p-4 my-2 rounded-lg shadow-md'>
             <div className='h-auto w-full flex flex-col'>
               <div className='w-full flex justify-between items-center'>
                 <div className='flex items-center'>
