@@ -19,6 +19,9 @@ func (f *DefaultNotificationFactory) CreateNotification(receiver, sender, notifi
 	case "foundPet":
 		fmt.Println("Creating found pet notification")
 		message = fmt.Sprintf("%s: %s has found your pet!", receiver, sender)
+	case "payment":
+		fmt.Println("Creating payment notification")
+		message = fmt.Sprintf("%s: %s has made a payment", receiver, sender)
 	case "Confirmation":
 		fmt.Println("Creating confirmation notification")
 		message = fmt.Sprintf("%s: %s has gifted you a reward! Check your banking account! แต้งกิ้วหลาย", receiver, sender)
