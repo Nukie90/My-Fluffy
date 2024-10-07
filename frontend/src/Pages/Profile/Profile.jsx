@@ -59,6 +59,10 @@ function Profile({ setCurrentPage }) {
                 status: post.status,
                 picture: post.picture,
                 reward: post.reward,
+                username: post.username, 
+                OwnerPicture: post.OwnerPicture, 
+                isSaved: post.isSaved, 
+                owner_id: post.owner_id, 
             }));
 
             setPosts(formattedPosts);
@@ -185,7 +189,7 @@ function Profile({ setCurrentPage }) {
             </div>
 
             {isModalVisible && selectedPost && (
-                <ShowPost post={selectedPost} setIsModalVisible={setIsModalVisible} />
+               <ShowPost post={selectedPost} setIsModalVisible={setIsModalVisible} username={username}/>
             )}
         </div>
     );

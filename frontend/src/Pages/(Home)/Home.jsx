@@ -111,7 +111,7 @@ function Home({ currentPage, setCurrentPage }) {
       </div>
       <div className="h-auto sm:w-full md:w-1/3 pt-4 pb-20 flex flex-col">
         <div className="h-auto md:ml-16 md:pl-3 text-left">
-          <h1 className="sm:text-xl md:text-2xl font-bold">Posts</h1>
+          {/* <h1 className="sm:text-xl md:text-2xl font-bold">Posts</h1> */}
           <BottomBar currentPage={currentPage} />
         </div>
 
