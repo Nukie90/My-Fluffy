@@ -69,7 +69,7 @@ export default function AddPost({ setIsAddPostVisible }) {
             setError(error.response?.data?.error || 'An error occurred while creating the post.');
         }
     };
-    
+
 
     const handleExitButton = () => {
         setIsAddPostVisible(false);

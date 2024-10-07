@@ -55,7 +55,7 @@ function Saved({setCurrentPage}) {
     }, [setCurrentPage]);
     
     return (
-        <div className='h-screen w-full bg-red-200 flex flex-col justify-center items-center'>
+        <div className='min-h-screen h-auto w-full bg-red-200 flex flex-col justify-center items-center'>
             {isLogged ? (
                 <div>
                     <div className="flex sm:flex-col md:flex-row h-auto w-full pt-20 sm:px-4 md:px-6 lg:px-8">

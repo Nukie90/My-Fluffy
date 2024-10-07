@@ -23,21 +23,17 @@ export default function Noti({ noti, setIsNotiVisible }) {
         }
     }
 
-    const handleRewardButton = (id) => {
-        // Placeholder for reward button logic
-    };
-
     return (
         <div className='fixed top-0 right-0 h-full w-full flex flex-col justify-center items-center z-50'>
             {/* Background overlay to close modal on click */}
             <div className='fixed inset-0 bg-black bg-opacity-50 z-10' onClick={handleExitButton}></div>
 
             {/* Main content area */}
-            <div className='relative h-4/5 w-11/12 flex flex-col items-center z-20 bgct-light-yellow rounded-xl shadow-lg transition-all duration-300 ease-out'>
+            <div className='relative h-4/5 w-11/12 flex flex-col items-center z-20 bgct-light-yellow rounded-xl shadow-lg transition-all duration-300 ease-out overflow-y-auto'>
                 {notifications.length > 0 ? (
                     notifications.map((notification) => (
                         <div key={notification.id}
-                            className='h-32 w-11/12 m-4 mb-1 p-4 flex flex-col items-center justify-center rounded-xl'
+                            className='h-32 w-11/12 mx-4 my-4 p-4 flex flex-col items-center justify-center rounded-xl'
                             style={{ backgroundColor: 'var(--color-light-purple)' }}
                         >
                             <div className='h-auto w-full flex justify-between items-center'>
@@ -55,17 +51,10 @@ export default function Noti({ noti, setIsNotiVisible }) {
                             <div className='h-auto w-full flex justify-end items-center'>
                                 <div className='w-full h-1/4 flex justify-end'>
                                     <button onClick={() => handleDeleteButton(notification.id)}>
-                                        <p className='text-xs mx-1 py-1 px-2 colorct-dark-purple rounded-lg'
-                                            style={{ border: '1px solid var(--color-dark-purple)' }}
-                                        >
-                                            Delete
-                                        </p>
-                                    </button>
-                                    <button onClick={() => handleRewardButton(notification.id)}>
-                                        <p className='text-xs mx-1 py-1 px-2 text-white bgct-orange rounded-lg'
+                                        <p className='text-xs mx-1 py-1 px-2 text-white rounded-lg bgct-orange'
                                             style={{ border: '1px solid var(--color-orange)' }}
                                         >
-                                            Reward
+                                            Delete
                                         </p>
                                     </button>
                                 </div>
