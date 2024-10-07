@@ -20,10 +20,10 @@ func NewPaymentUsecase(pr *repository.PaymentRepo, pg shared.PaymentGateway, cn 
 }
 
 func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error {
-	err := pu.PaymentGateway.ProcessPayment(payment)
-	if err != nil {
-		return err
-	}
+	// err := pu.PaymentGateway.ProcessPayment(payment)
+	// if err != nil {
+	// 	return err
+	// }
 
 	payInfo := &entity.Payment{
 		Amount:     payment.Amount,
@@ -31,7 +31,7 @@ func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error 
 		UserID:     ulid.MustParse(payment.UserID),
 	}
 
-	err = pu.PaymentRepo.CreatePayment(payInfo)
+	err := pu.PaymentRepo.CreatePayment(payInfo)
 	if err != nil {
 		return err
 	}
