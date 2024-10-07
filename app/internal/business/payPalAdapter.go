@@ -5,21 +5,22 @@ import (
 )
 
 type PayPalAdapter struct {
-	// Any configuration or client related to PayPal API
+	paymentService PaymentService
+}
+func NewPayPalAdapter(service PaymentService) *PayPalAdapter {
+	return &PayPalAdapter{
+		paymentService: service,
+	}
 }
 
 func (p *PayPalAdapter) ProcessPayment(payment *model.CreatePayment) error {
-	// Logic to interact with PayPal API
-	// Convert payment details to PayPal format and handle the transaction
-	// You may need PayPal SDK here or direct API calls
 	payPalPayment := &model.PayPalPayment{
 		Amount:      payment.Amount,
 		ReceiverID:  payment.ReceiverID,
 		UserID:      payment.UserID,
 	}
 
-	// Call to PayPal API
-	err := p.callPayPalAPI(payPalPayment)
+	err := p.paymentService.ProcessPaymentService(payPalPayment)
 	if err != nil {
 		return err
 	}
@@ -27,8 +28,4 @@ func (p *PayPalAdapter) ProcessPayment(payment *model.CreatePayment) error {
 	return nil
 }
 
-// This would be the internal PayPal API call function
-func (p *PayPalAdapter) callPayPalAPI(payment *model.PayPalPayment) error {
-	// Implement API logic to communicate with PayPal
-	return nil
-}
+
