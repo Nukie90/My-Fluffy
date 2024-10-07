@@ -35,3 +35,7 @@ type PaginatedPostWithUsername struct {
 	FoundID  string  `json:"found_id"`
 	Reward   float64 `json:"reward"`
 }
+
+type ConfirmationPost struct {
+	ID uint `json:"id"`
+}

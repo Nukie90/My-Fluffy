@@ -21,16 +21,17 @@ func NewSavedPostHandler(spu *business.SavedPostUsecase) *SavedPostHandler {
 }
 
 // CreateSavedPost handles the creation of a saved post.
-// @Summary      Create a new saved post
-// @Description  Create a new saved post
-// @Tags         saved_posts
-// @Accept       json
-// @Param        saved_post body model.SavedPost true "Saved post information"
-// @Produce      json
-// @Success      200  {object}  model.SuccessResponse "Saved post created successfully"
-// @Failure      400  {object}  model.ErrorResponse "Bad request"
-// @Failure      500  {object}  model.ErrorResponse "Internal server error"
-// @Router       /savedPost/saved_posts [post]
+//
+//	@Summary		Create a new saved post
+//	@Description	Create a new saved post
+//	@Tags			saved_posts
+//	@Accept			json
+//	@Param			saved_post	body	model.SavedPost	true	"Saved post information"
+//	@Produce		json
+//	@Success		200	{object}	model.SuccessResponse	"Saved post created successfully"
+//	@Failure		400	{object}	model.ErrorResponse		"Bad request"
+//	@Failure		500	{object}	model.ErrorResponse		"Internal server error"
+//	@Router			/savedPost/saved_posts [post]
 func (sh *SavedPostHandler) CreateSavedPost(c *fiber.Ctx) error {
 	var savedPost model.SavedPost
 	if err := c.BodyParser(&savedPost); err != nil {

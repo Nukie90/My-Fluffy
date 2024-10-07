@@ -2,8 +2,9 @@ package api
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type RouterProxy struct {
@@ -16,7 +17,7 @@ type RouterProxy struct {
 func NewRouterProxy(realRouter *Router) *RouterProxy {
 	proxy := &RouterProxy{
 		realRouter:  realRouter,
-		maxAllowed:  999,
+		maxAllowed:  50,
 		rateLimiter: make(map[string]int),
 		resetTime:   30 * time.Second,
 	}

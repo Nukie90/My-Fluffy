@@ -9,13 +9,15 @@ type Router struct {
 	userHandler      *presentation.UserHandler
 	postHandler      *presentation.PostHandler
 	savedPostHandler *presentation.SavedPostHandler
+	paymentHandler   *presentation.PaymentHandler
 }
 
-func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler, sph *presentation.SavedPostHandler) *Router {
+func NewRouter(uh *presentation.UserHandler, ph *presentation.PostHandler, sph *presentation.SavedPostHandler, pmh *presentation.PaymentHandler) *Router {
 	return &Router{
 		userHandler:      uh,
 		postHandler:      ph,
 		savedPostHandler: sph,
+		paymentHandler:   pmh,
 	}
 }
 
@@ -36,6 +38,7 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 				post.Post("/", r.postHandler.CreatePost)
 				post.Get("/user", r.postHandler.GetPostsFromSpecificUser)
 				post.Put("/found", r.postHandler.FoundPet)
+				post.Put("/confirmation", r.postHandler.Confirmation)
 				post.Get("/feed", r.postHandler.GetPaginatedPosts)
 			}
 			savedPosts := v1.Group("/saved_posts")
@@ -49,6 +52,11 @@ func (r *Router) SetupRoutes(app *fiber.App) {
 				noti.Get("/", r.userHandler.GetNotifications)
 				noti.Delete("/:id", r.userHandler.DeleteNotification)
 			}
+			//payment := v1.Group("/payments")
+			//{
+			//	payment.Post("/", r.paymentHandler.CreateUserPayment)
+			//	payment.Get("/user", r.paymentHandler.GetPaymentsFromSpecificUser)
+			//}
 		}
 	}
 }

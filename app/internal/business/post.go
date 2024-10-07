@@ -96,6 +96,24 @@ func (pu *PostUsecase) FoundPet(foundPost *model.FoundPost) error {
 	return nil
 }
 
+func (pu *PostUsecase) Confirmation(postID uint) error {
+	err := pu.PostRepo.Confirmation(postID)
+	if err != nil {
+		return err
+	}
+
+	//get the post
+	post, err := pu.PostRepo.GetPostByID(postID)
+	if err != nil {
+		return err
+	}
+
+	//notify the owner
+	pu.ClientNotifier.NotifyObserver(post.FoundID.String(), post.OwnerID.String(), "Confirmation")
+
+	return nil
+}
+
 func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.PaginatedPostWithUsername, error) {
 	const postsPerPage = 10
 	offset := (page - 1) * postsPerPage
