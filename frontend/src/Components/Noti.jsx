@@ -44,7 +44,10 @@ export default function Noti({ noti, setIsNotiVisible }) {
                                 </div>
                                 <div className='h-full w-full w-1/2 flex flex-col justify-center text-left'>
                                     <div className='w-full'>
-                                        <p className='text-md colorct-dark-purple'>{notification.message}</p>
+                                        <p className='text-md colorct-dark-purple'> {notification.message.split(":").length > 2 
+                                            ? notification.message.split(":")[2] 
+                                            : notification.message.split(":")[1]}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
