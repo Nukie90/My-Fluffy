@@ -27,6 +27,7 @@ function Saved({setCurrentPage}) {
             title: post.title,
             username: post.username,
             owner_id: post.owner_id,
+            found_id: post.found_id,
             content: post.content,
             status: post.status,
             picture: post.picture,

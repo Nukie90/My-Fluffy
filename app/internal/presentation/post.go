@@ -158,7 +158,7 @@ func (ph *PostHandler) GetPaginatedPosts(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(posts)
+	return c.JSON(posts) // posts now contains PaginatedPostResponse
 }
 
 // Confirmation godoc

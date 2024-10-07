@@ -25,7 +25,7 @@ func (pr *PaymentRepo) CreatePayment(payment *entity.Payment) error {
 
 func (pr *PaymentRepo) GetPaymentFromSpecificUser(userID ulid.ULID) ([]entity.Payment, error) {
 	var payments []entity.Payment
-	result := pr.DB.Where("owner_id = ?", userID).Find(&payments)
+	result := pr.DB.Where("receiver_id = ? or user_id = ?", userID, userID).Find(&payments)
 	if result.Error != nil {
 		return nil, result.Error
 	}

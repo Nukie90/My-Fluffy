@@ -30,6 +30,7 @@ function Home({ currentPage, setCurrentPage }) {
           id: post.id,
           username: post.username,
           owner_id: post.owner_id,
+          found_id: post.found_id,
           title: post.title,
           content: post.content,
           status: post.status,
@@ -65,6 +66,7 @@ function Home({ currentPage, setCurrentPage }) {
         title: post.title,
         content: post.content,
         owner_id: post.owner_id,
+        found_id: post.found_id,
         status: post.status,
         picture: post.picture,
         reward: post.reward

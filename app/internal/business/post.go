@@ -114,15 +114,29 @@ func (pu *PostUsecase) Confirmation(postID uint) error {
 	return nil
 }
 
-func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.PaginatedPostWithUsername, error) {
+func (pu *PostUsecase) GetPaginatedPosts(page int) ([]model.PaginatedPostResponse, error) {
 	const postsPerPage = 10
 	offset := (page - 1) * postsPerPage
 
-	// Call the new repository method
 	posts, err := pu.PostRepo.GetPaginatedPosts(postsPerPage, offset)
 	if err != nil {
 		return nil, err
 	}
 
-	return posts, nil
+	var response []model.PaginatedPostResponse
+	for _, post := range posts {
+		response = append(response, model.PaginatedPostResponse{
+			ID:       post.ID,
+			Username: post.Username,
+			Title:    post.Title,
+			Content:  post.Content,
+			Status:   post.Status,
+			Picture:  post.Picture,
+			OwnerID:  post.OwnerID.String(), // Convert ULID to string
+			FoundID:  post.FoundID.String(), // Convert ULID to string
+			Reward:   post.Reward,
+		})
+	}
+
+	return response, nil
 }

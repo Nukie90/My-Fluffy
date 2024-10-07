@@ -2,7 +2,6 @@ package presentation
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/business"
@@ -30,22 +29,28 @@ func NewPaymentHandler(pu *business.PaymentUsecase) *PaymentHandler {
 //	@Failure		400	{string}	string	"Bad request"
 //	@Router			/payments [post]
 func (ph *PaymentHandler) CreateUserPayment(c *fiber.Ctx) error {
-	amount := c.FormValue("amount")
-	receiverID := c.FormValue("receiver_id")
-	amountFloat, err := strconv.ParseFloat(amount, 64)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
 	var payment model.CreatePayment
-	payment.Amount = amountFloat
-	payment.ReceiverID = receiverID
-	cookie := c.Cookies("session")
-	payment.UserID = cookie
+
+	// Parse the JSON body directly into the payment struct
 	if err := c.BodyParser(&payment); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	err = ph.PaymentUsecase.CreateUserPayment(&payment)
+	// Ensure the amount is set and convert it to float
+	if payment.Amount <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid amount"})
+	}
+
+	// Get the session cookie
+	cookie := c.Cookies("session")
+	if cookie == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Session cookie not found"})
+	}
+
+	payment.UserID = cookie
+
+	// Call the payment use case to create the payment
+	err := ph.PaymentUsecase.CreateUserPayment(&payment)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}

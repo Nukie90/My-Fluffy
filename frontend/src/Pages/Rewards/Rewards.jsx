@@ -1,57 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import RewardPic from './../../Components/Icons/reward_pic.svg';
 
 export default function RewardPage() {
-    const rewards = [
-        {
-            id: 1,
-            name: 'Alice Johnson',
-            petDescription: 'Bella, Golden Retriever, 1 year',
-            details: 'Last seen at Central Park. Please contact if found.',
-            reward: '2,000 B',
-            image: 'https://example.com/golden-retriever.jpg'
-        },
-        {
-            id: 2,
-            name: 'Michael Smith',
-            petDescription: 'Charlie, Beagle, 3 years',
-            details: 'Lost near Elm Street. He is very friendly.',
-            reward: '1,800 B',
-            image: 'https://example.com/beagle.jpg'
-        },
-        {
-            id: 3,
-            name: 'Emily Davis',
-            petDescription: 'Daisy, Persian Cat, 6 months',
-            details: 'Missing from Green Avenue. She is shy and scared.',
-            reward: '2,500 B',
-            image: 'https://example.com/persian-cat.jpg'
-        },
-        {
-            id: 4,
-            name: 'James Wilson',
-            petDescription: 'Max, Labrador, 2 years',
-            details: 'Lost near the riverbank. Loves playing fetch.',
-            reward: '2,200 B',
-            image: 'https://example.com/labrador.jpg'
-        },
-        {
-            id: 5,
-            name: 'Sophia Brown',
-            petDescription: 'Luna, Siamese Cat, 1 year',
-            details: 'Disappeared from my backyard on Oak Street.',
-            reward: '1,900 B',
-            image: 'https://example.com/siamese-cat.jpg'
-        },
-        {
-            id: 6,
-            name: 'Daniel Miller',
-            petDescription: 'Rocky, Bulldog, 4 years',
-            details: 'Went missing near the downtown area. Very gentle.',
-            reward: '2,300 B',
-            image: 'https://example.com/bulldog.jpg'
-        }
-    ];
+    const [rewards, setRewards] = useState([]);
+    const [usernames, setUsernames] = useState({}); // State to hold usernames
+    const [totalFound, setTotalFound] = useState(0); // State to hold total found
+    const [totalAmount, setTotalAmount] = useState(0); // State to hold total reward amount
+
+    useEffect(() => {
+        const fetchRewards = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/payments/user', {
+                    withCredentials: true,
+                });
+                setRewards(response.data);
+                console.log(response.data);
+
+                // Calculate total found and total reward amount
+                setTotalFound(response.data.length);
+                const totalRewardAmount = response.data.reduce((sum, reward) => sum + parseFloat(reward.amount), 0);
+                setTotalAmount(totalRewardAmount);
+
+                // Fetch usernames for each owner_id
+                const usernamesFetched = await Promise.all(response.data.map(async (reward) => {
+                    const userResponse = await axios.get(`http://localhost:3000/api/v1/users/${reward.owner_id}`, {
+                        withCredentials: true,
+                    });
+                    return { id: reward.id, owner_id: reward.owner_id, username: userResponse.data.username };
+                }));
+
+                // Convert array to an object for easy access
+                const usernamesObject = usernamesFetched.reduce((acc, curr) => {
+                    acc[curr.owner_id] = curr.username;
+                    return acc;
+                }, {});
+                
+                setUsernames(usernamesObject);
+
+            } catch (err) {
+                console.log(err.message || 'Failed to fetch rewards');
+            }
+        };
+
+        fetchRewards();
+    }, []);
+
+    function convertDate(dateString) {
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false, // Use 24-hour format
+        };
+    
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', options);
+    }
 
     return (
         <div className="
@@ -67,11 +74,11 @@ export default function RewardPage() {
 
             <div className="flex justify-around mb-6 md:w-full">
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold text-[#504E76]">3</h2>
+                    <h2 className="text-3xl font-bold text-[#504E76]">{totalFound}</h2> {/* Display total found */}
                     <p className="text-gray-600">Found</p>
                 </div>
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold text-[#504E76]">6,000</h2>
+                    <h2 className="text-3xl font-bold text-[#504E76]">{totalAmount.toLocaleString()}</h2> {/* Display total amount */}
                     <p className="text-gray-600">Reward</p>
                 </div>
             </div>
@@ -81,7 +88,7 @@ export default function RewardPage() {
                     <div key={reward.id} className="bg-[#C4C3E3] rounded-lg p-4 flex flex-col space-y-4">
                         <div className="flex items-center space-x-2">
                             <div className="w-8 h-8 bg-purple-500 rounded-full"></div>
-                            <h3 className="text-md font-bold text-gray-900">{reward.name}</h3>
+                            <h3 className="text-md font-bold text-gray-900">{reward.id || 'Loading...'}</h3> {/* Display username */}
                         </div>
 
                         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
@@ -94,13 +101,13 @@ export default function RewardPage() {
                             </div>
 
                             <div className="flex-1">
-                                <p className="text-lg font-bold text-gray-900">{reward.petDescription}</p>
-                                <p className="text-sm text-gray-500 mt-1">{reward.details}</p>
+                                <p className="text-lg font-bold text-gray-900">{usernames[reward.owner_id]}</p>
+                                <p className="text-sm text-gray-500 mt-1">{convertDate(reward.created_at)}</p>
                             </div>
                         </div>
 
                         <div className="text-right">
-                            <p className="font-bold text-gray-900">Reward: {reward.reward}</p>
+                            <p className="font-bold text-gray-900">Reward: {reward.amount}</p>
                         </div>
                     </div>
                 ))}

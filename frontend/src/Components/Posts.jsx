@@ -8,7 +8,7 @@ import axios from 'axios';
 export default function Posts({ data, savedPosts }) {
   const [localSavedPosts, setLocalSavedPosts] = useState({});
   const [postStatuses, setPostStatuses] = useState({});
-  const [ownerUsername, setOwnerUsername] = useState(''); // Track the fetched username
+  const [sessionCookie, setSessionCookie] = useState(''); // Track the fetched username
 
   useEffect(() => {
     const initialSavedPosts = {};
@@ -19,33 +19,13 @@ export default function Posts({ data, savedPosts }) {
     
     const initialPostStatuses = {};
     data.forEach(post => {
-      initialPostStatuses[post.id] = post.status; // Initialize with the status from the data
+      initialPostStatuses[post.id] = post.status; 
     });
     setPostStatuses(initialPostStatuses);
 
-    const fetchUsername = async () => {
-      const cookies = document.cookie.split('; ');
-      const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
+    const cookies = document.cookie.split('; ');
+    setSessionCookie(cookies.find(cookie => cookie.startsWith('session=')).split('=')[1]);
     
-      // Check if sessionCookie is found and split safely
-      if (sessionCookie) {
-        const sessionValue = sessionCookie.split('=')[1];
-    
-        try {
-          const response = await axios.get(`http://localhost:3000/api/v1/users/${sessionValue}`, {
-            withCredentials: true,
-          });
-          setOwnerUsername(response.data.username); // Set the username in state
-        } catch (error) {
-          console.error('Error fetching username:', error);
-        }
-      } else {
-        console.error('Session cookie not found');
-      }
-    };
-    
-
-    fetchUsername(); // Call the fetch function
   }, [savedPosts, data]); 
 
   const handleSave = async (id) => {
@@ -77,9 +57,6 @@ export default function Posts({ data, savedPosts }) {
   };
 
   const handleStatusClick = async (post) => {
-    const cookies = document.cookie.split('; ');
-    const sessionCookie = cookies.find(cookie => cookie.startsWith('session=')).split('=')[1];
-    
     try {
       if (post.status === 'Missing') {
         await axios.put(`http://localhost:3000/api/v1/posts/found`, {
@@ -94,7 +71,7 @@ export default function Posts({ data, savedPosts }) {
           ...prev,
           [post.id]: 'Pending', // Update status to 'Pending'
         }));
-      } else if (post.status === 'Pending' && ownerUsername === post.username) {
+      } else if (post.status === 'Pending' && sessionCookie === post.owner_id) {
         await axios.put(`http://localhost:3000/api/v1/posts/confirmation`, {
           id: post.id,
         }, {
@@ -106,6 +83,18 @@ export default function Posts({ data, savedPosts }) {
           ...prev,
           [post.id]: 'Found', // Update status to 'Confirmed'
         }));
+
+        console.log({
+          amount: post.reward,
+          receiver_id: post.found_id
+        });
+        
+        await axios.post(`http://localhost:3000/api/v1/payments/`, {
+          amount: post.reward,
+          receiver_id: post.found_id
+        }, {
+          withCredentials: true,
+        });
       }
     } catch (error) {
       console.error('Error updating post status:', error);
@@ -159,7 +148,7 @@ export default function Posts({ data, savedPosts }) {
                     className='flex w-auto h-8 py-1 px-2 bgct-orange rounded-lg' 
                     onClick={() => handleStatusClick(post)}
                   >
-                    <h2 className='text-md text-white font-medium mx-2'>{postStatus === 'Pending' && ownerUsername === post.username ? 'Confirm?' : postStatus}</h2>
+                    <h2 className='text-md text-white font-medium mx-2'>{postStatus === 'Pending' && sessionCookie === post.owner_id ? 'Confirm?' : postStatus}</h2>
                     <img src={FoundIcon} alt='found_icon' className='w-6 h-6' />
                   </button>
                 </div>
