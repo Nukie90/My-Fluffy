@@ -24,23 +24,74 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-
+        "/notifications": {
+            "get": {
+                "description": "Get all notifications for current user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Get all notifications",
+                "responses": {
+                    "200": {
+                        "description": "List of notifications",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Notification"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/{id}": {
+            "delete": {
+                "description": "Delete a notification",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Delete a notification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Notification ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/payments": {
             "post": {
                 "description": "Create a new payment",
                 "consumes": [
                     "application/json"
                 ],
-
-        "/notifications": {
-            "get": {
-                "description": "Get all notifications for current user",
-
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-
                     "payments"
                 ],
                 "summary": "Create a new payment",
@@ -77,32 +128,10 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
-
-                    "notifications"
-                ],
-                "summary": "Get all notifications",
-                "responses": {
-                    "200": {
-                        "description": "List of notifications",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Notification"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/notifications/{id}": {
-            "delete": {
-                "description": "Delete a notification",
-
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-
                     "payments"
                 ],
                 "summary": "Get payments from specific user",
@@ -111,34 +140,18 @@ const docTemplate = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "userID",
-
-                    "notifications"
-                ],
-                "summary": "Delete a notification",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Notification ID",
-                        "name": "id",
-
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-
                         "description": "Payments from specific user",
                         "schema": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/model.Payment"
                             }
-
-                        "description": "Notification deleted",
-                        "schema": {
-                            "type": "string"
-
                         }
                     },
                     "400": {
@@ -196,6 +209,46 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Post created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/confirmation/": {
+            "put": {
+                "description": "Confirmation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Confirmation",
+                "parameters": [
+                    {
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ConfirmationPost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Confirmation sent",
                         "schema": {
                             "type": "string"
                         }
@@ -537,7 +590,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
-
+        "model.ConfirmationPost": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.CreatePayment": {
             "type": "object",
             "properties": {
@@ -548,12 +608,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_id": {
-
+                    "type": "string"
+                }
+            }
+        },
         "model.ErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {
-
                     "type": "string"
                 }
             }
@@ -582,20 +644,6 @@ const docTemplate = `{
                 }
             }
         },
-
-        "model.Payment": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "transaction": {
-                    "type": "string"
-                },
-
         "model.Notification": {
             "type": "object",
             "properties": {
@@ -609,6 +657,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "owner_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Payment": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "transaction": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "string"
                 }
             }

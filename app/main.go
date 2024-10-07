@@ -56,6 +56,7 @@ func (a *App) Start(name, value, usage string) {
 	db, err := dbConfig.Connector()
 	if err != nil {
 		fmt.Println("Error connecting to database: ", err)
+		return
 	}
 
 	//Initialize the repository, notifier and service
@@ -84,7 +85,6 @@ func (a *App) Start(name, value, usage string) {
 	paymentHandler := presentation.PaymentHandler{PaymentUsecase: paymentUsecase}
 	realRouter := api.NewRouter(&userHandler, &postHandler, &savedPostHandler,&paymentHandler)
 	routerProxy := api.NewRouterProxy(realRouter)
-
 
 	routerProxy.SetupRoutes(a.App)
 
