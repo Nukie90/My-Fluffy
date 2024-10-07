@@ -14,7 +14,7 @@ func (p *PayPalAdapter) ProcessPayment(payment *model.CreatePayment) error {
 	// You may need PayPal SDK here or direct API calls
 	payPalPayment := &model.PayPalPayment{
 		Amount:      payment.Amount,
-		Transaction: payment.Transaction,
+		ReceiverID:  payment.ReceiverID,
 		UserID:      payment.UserID,
 	}
 

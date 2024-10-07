@@ -1,8 +1,6 @@
 package business
 
 import (
-	"fmt"
-
 	"github.com/Nukie90/my-fluffy/app/domain/entity"
 	"github.com/Nukie90/my-fluffy/app/domain/model"
 	"github.com/Nukie90/my-fluffy/app/internal/repository"
@@ -28,9 +26,9 @@ func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error 
 	}
 
 	payInfo := &entity.Payment{
-		Amount:      payment.Amount,
-		Transaction: payment.Transaction,
-		UserID:      ulid.MustParse(payment.UserID),
+		Amount:     payment.Amount,
+		ReceiverID: ulid.MustParse(payment.ReceiverID),
+		UserID:     ulid.MustParse(payment.UserID),
 	}
 
 	err = pu.PaymentRepo.CreatePayment(payInfo)
@@ -38,7 +36,7 @@ func (pu *PaymentUsecase) CreateUserPayment(payment *model.CreatePayment) error 
 		return err
 	}
 
-	pu.ClientNotifier.NotifyObserver(payment.UserID, fmt.Sprintf("%.2f", payment.Amount), "payment")
+	pu.ClientNotifier.NotifyObserver(payment.ReceiverID, payment.UserID, "payment")
 
 	return nil
 }
