@@ -5,7 +5,7 @@ import "github.com/Nukie90/my-fluffy/app/domain/model"
 type Subject interface {
 	Register(observer Observer)
 	Unregister(observer Observer)
-	NotifyObserver(userID string, notificationType string)
+	NotifyObserver(string, string, string)
 }
 
 type Observer interface {
@@ -17,5 +17,5 @@ type NotificationFactory interface {
 }
 
 type PaymentGateway interface {
-    ProcessPayment(payment *model.CreatePayment) error
+	ProcessPayment(payment *model.CreatePayment) error
 }

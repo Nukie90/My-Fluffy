@@ -6,6 +6,8 @@ type UserNotifier struct {
 	Observers []Observer
 }
 
+var _ Subject = (*UserNotifier)(nil)
+
 func (ucn *UserNotifier) Register(observer Observer) {
 	ucn.Observers = append(ucn.Observers, observer)
 }
