@@ -7,6 +7,8 @@ import axios from 'axios';
 
 export default function Posts({ data, savedPosts }) {
   const [localSavedPosts, setLocalSavedPosts] = useState({});
+  const [postStatuses, setPostStatuses] = useState({});
+  const [ownerUsername, setOwnerUsername] = useState(''); // Track the fetched username
 
   useEffect(() => {
     const initialSavedPosts = {};
@@ -14,7 +16,37 @@ export default function Posts({ data, savedPosts }) {
       initialSavedPosts[post.id] = true; 
     });
     setLocalSavedPosts(initialSavedPosts);
-  }, [savedPosts]); 
+    
+    const initialPostStatuses = {};
+    data.forEach(post => {
+      initialPostStatuses[post.id] = post.status; // Initialize with the status from the data
+    });
+    setPostStatuses(initialPostStatuses);
+
+    const fetchUsername = async () => {
+      const cookies = document.cookie.split('; ');
+      const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
+    
+      // Check if sessionCookie is found and split safely
+      if (sessionCookie) {
+        const sessionValue = sessionCookie.split('=')[1];
+    
+        try {
+          const response = await axios.get(`http://localhost:3000/api/v1/users/${sessionValue}`, {
+            withCredentials: true,
+          });
+          setOwnerUsername(response.data.username); // Set the username in state
+        } catch (error) {
+          console.error('Error fetching username:', error);
+        }
+      } else {
+        console.error('Session cookie not found');
+      }
+    };
+    
+
+    fetchUsername(); // Call the fetch function
+  }, [savedPosts, data]); 
 
   const handleSave = async (id) => {
     const isSaved = localSavedPosts[id];
@@ -44,10 +76,47 @@ export default function Posts({ data, savedPosts }) {
     }
   };
 
+  const handleStatusClick = async (post) => {
+    const cookies = document.cookie.split('; ');
+    const sessionCookie = cookies.find(cookie => cookie.startsWith('session=')).split('=')[1];
+    
+    try {
+      if (post.status === 'Missing') {
+        await axios.put(`http://localhost:3000/api/v1/posts/found`, {
+          found_id: sessionCookie,
+          id: post.id,
+        }, {
+          withCredentials: true,
+        });
+        
+        // Update the local status
+        setPostStatuses(prev => ({
+          ...prev,
+          [post.id]: 'Pending', // Update status to 'Pending'
+        }));
+      } else if (post.status === 'Pending' && ownerUsername === post.username) {
+        await axios.put(`http://localhost:3000/api/v1/posts/confirmation`, {
+          id: post.id,
+        }, {
+          withCredentials: true,
+        });
+        
+        // Update the local status
+        setPostStatuses(prev => ({
+          ...prev,
+          [post.id]: 'Found', // Update status to 'Confirmed'
+        }));
+      }
+    } catch (error) {
+      console.error('Error updating post status:', error);
+    }
+  };  
+  
   return (
     <div className='h-auto pb-4 flex flex-col justify-center items-center'>
       {data.map((post) => {
         const isSaved = localSavedPosts[post.id]; // Check saved status in local state
+        const postStatus = postStatuses[post.id]; // Get the current status from local state
 
         return (
           <div key={post.id} className='h-auto w-full bg-white p-4 my-2 rounded-lg shadow-md'>
@@ -71,7 +140,7 @@ export default function Posts({ data, savedPosts }) {
                 <h2 className='text-xl colorct-dark-purple font-bold'>{post.title}</h2>
                 <div className='h-auto w-full flex justify-end items-center'>
                   <button onClick={() => handleSave(post.id)}>
-                    <img src={isSaved ? SaveIcon: UnsaveIcon} alt='save_icon' className='w-6 h-6' />
+                    <img src={isSaved ? SaveIcon : UnsaveIcon} alt='save_icon' className='w-6 h-6' />
                   </button>
                 </div>
               </div>
@@ -86,8 +155,11 @@ export default function Posts({ data, savedPosts }) {
                   <h1>{post.reward || 'N/A'}</h1>
                 </div>
                 <div className='w-1/2 flex items-center justify-end'>
-                  <button className='flex w-auto h-8 py-1 px-2 bgct-orange rounded-lg'>
-                    <h2 className='text-md text-white font-medium mx-2'>Found</h2>
+                  <button 
+                    className='flex w-auto h-8 py-1 px-2 bgct-orange rounded-lg' 
+                    onClick={() => handleStatusClick(post)}
+                  >
+                    <h2 className='text-md text-white font-medium mx-2'>{postStatus === 'Pending' && ownerUsername === post.username ? 'Confirm?' : postStatus}</h2>
                     <img src={FoundIcon} alt='found_icon' className='w-6 h-6' />
                   </button>
                 </div>

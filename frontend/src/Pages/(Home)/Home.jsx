@@ -29,6 +29,7 @@ function Home({ currentPage, setCurrentPage }) {
         const formattedPosts = newPosts.map(post => ({
           id: post.id,
           username: post.username,
+          owner_id: post.owner_id,
           title: post.title,
           content: post.content,
           status: post.status,
@@ -63,6 +64,7 @@ function Home({ currentPage, setCurrentPage }) {
         id: post.id,
         title: post.title,
         content: post.content,
+        owner_id: post.owner_id,
         status: post.status,
         picture: post.picture,
         reward: post.reward

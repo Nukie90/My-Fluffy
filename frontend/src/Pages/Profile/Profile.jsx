@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './../../App.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -20,6 +20,7 @@ function Profile({ setCurrentPage }) {
     const [tab, setTab] = useState('finding');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const fetchUser = async () => {
         try {
@@ -72,6 +73,13 @@ function Profile({ setCurrentPage }) {
         }
     };
 
+    const handleLogout = () => {
+        // Clear the session cookie
+        document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        setIsLogged(false);
+        navigate('/'); // Redirect to home
+    };
+
     useEffect(() => {
         setCurrentPage('Profile');
         const cookies = document.cookie.split('; ');
@@ -119,7 +127,7 @@ function Profile({ setCurrentPage }) {
                         </div>
                         <p className='text-sm mb-6 text-[#43337B] ml-1'>A cool kitten dad of 2<br />If you find any evidence of Lucy, contact me asap</p>
                         <div className='flex w-full justify-evenly mb-6'>
-                            <button className='px-20 py-1 bg-[#F9F9F9] text-[#CF4B4B] rounded-lg border-2 border-[#CF4B4B] font-bold'>Log out</button>
+                            <button className='px-20 py-1 bg-[#F9F9F9] text-[#CF4B4B] rounded-lg border-2 border-[#CF4B4B] font-bold' onClick={handleLogout}>Log out</button>
                         </div>
                         <div className='w-full flex items-center justify-around mb-6 relative'>
                             <button
